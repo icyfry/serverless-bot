@@ -1,0 +1,31 @@
+version: '3'
+
+env:
+  ENV: testnet
+
+dotenv: ['.env.{{.ENV}}', '.env']
+
+tasks:
+
+  default:
+    cmds:
+      - task --list-all
+
+  test:
+    cmds:
+      - pnpm run test
+
+  lint:
+    cmds:
+      - pnpm run lint
+
+  build:
+    cmds:
+      - pnpm run build
+
+  build-and-deploy:
+    cmds:
+      - pnpm run build
+      - cd build && zip -r serverless-trd-bot.zip .
+      - cd build && aws s3 sync . s3://{{.LAMBDA_S3}}/{{.LAMBDA_VERSION}} --exclude "*" --include "serverless-trd-bot.zip"
+      - aws lambda update-function-code --function-name {{.LAMBDA_ARN}} --region eu-west-1 --s3-bucket {{.LAMBDA_S3}} --s3-key {{.LAMBDA_VERSION}}/serverless-trd-bot.zip
