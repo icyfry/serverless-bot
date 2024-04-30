@@ -59,7 +59,7 @@ describe("dYdX", () => {
   }, TIMEOUT);
 
   it("dryrun", async () => {
-    const input : Input = {rawData:"{}", dryrun:true, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.Mock ,details:{action:"SELL",limit:50000}};
+    const input : Input = {rawData:"{}", roundingFactor:1000, dryrun:true, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.Mock ,details:{action:"SELL",limit:50000}};
     let response = await bot.process(input, new BasicStrat(), undefined);
     expect(response.response_error).not.toBe(null);
     expect(response.response_success).toBe(null);

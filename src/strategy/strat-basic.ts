@@ -22,7 +22,7 @@ export class BasicStrat extends Strat {
 
         // Order size (in target currency)
         if(this.R === undefined) throw new Error("R not defined");
-        order.size = (this.R / input.price);
+        order.size = Math.round((this.R / input.price)*input.roundingFactor)/input.roundingFactor;
 
         switch(input.source) { 
             case InputSource.SuperTrend: {
@@ -50,6 +50,10 @@ export class BasicStrat extends Strat {
                 else {
                     throw new Error("Unknown SMC type " + details.type);
                 }
+                break;
+            }
+            case InputSource.Mock: {
+                order.side = OrderSide.BUY;
                 break;
             }
             default: {

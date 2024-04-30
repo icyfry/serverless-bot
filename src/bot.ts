@@ -10,20 +10,16 @@ import { CallbackResponseParams } from './main';
  */
 export class Input {
     public rawData: any;
-    public market: string;
-    public price: number;
-    public source: InputSource;
-    public details: InputDetails;
-    public emitKey: string;
+    public market: string = "BTC-USD";
+    public price: number = 0;
+    public source: InputSource = InputSource.Mock;
+    public details: InputDetails = {};
+    public emitKey: string = "nokey";
     public dryrun = false;
+    public roundingFactor = 100000000; // 8 decimals
     constructor(event: string) {
         this.rawData = JSON.parse(event);
-        this.market = this.rawData.market;
-        this.price = this.rawData.price;
-        this.source = this.rawData.source as InputSource;
-        this.details = this.rawData.details as InputDetails;
-        this.emitKey = this.rawData.emitKey;
-        if(this.rawData.dryrun !== undefined) this.dryrun = this.rawData.dryrun;
+        Object.assign(this, this.rawData);
     }
 }
 
