@@ -9,7 +9,6 @@ import { CallbackResponseParams } from './main';
  * Input of the bot
  */
 export class Input {
-    public rawData: any;
     public market: string = "BTC-USD";
     public price: number = 0;
     public source: InputSource = InputSource.Mock;
@@ -18,8 +17,7 @@ export class Input {
     public dryrun = false;
     public roundingFactor = 100000000; // 8 decimals
     constructor(event: string) {
-        this.rawData = JSON.parse(event);
-        Object.assign(this, this.rawData);
+        Object.assign(this, JSON.parse(event));
     }
 }
 
@@ -28,14 +26,11 @@ export class Input {
  */
 export class Output {
     public order: BotOrder;
-    public transaction: any;
-    constructor(order: BotOrder, transaction: any) {
+    constructor(order: BotOrder) {
         this.order = order;
-        this.transaction = transaction;
     }
     toString() : string { return JSON.stringify(
         {
-            "tx hash" : this.transaction.hash,
             "order" : this.order,
         },
     null, 2); }
@@ -50,7 +45,7 @@ export class BotOrder {
     public side:OrderSide = OrderSide.BUY; // side of the order
     public timeInForce:OrderTimeInForce = OrderTimeInForce.IOC;
     public execution:OrderExecution = OrderExecution.DEFAULT;
-    public price = 30000;
+    public price = 0;
     public size = 0; // subticks are calculated by the price of the order
     public postOnly = false; // If true, order is post only
     public reduceOnly = false; // if true, the order will only reduce the position size
@@ -101,6 +96,13 @@ export abstract class Bot {
      * @returns transaction response
      */
     public abstract placeOrder(order:BotOrder ): Promise<any>;
+
+    /**
+     * Close a position on the exchange
+     * @param market the market to close
+     * @returns transaction response
+     */
+    public abstract closePosition(market: string): Promise<any>;
     
     /**
      * Connect to the exchange
@@ -168,11 +170,23 @@ export abstract class Bot {
 
             // Order
             const order: BotOrder = strategy.getStatelessOrderBasedOnInput(input);
-            await this.discord.sendMessageForOrder(order);
-            const transaction: any = await this.placeOrder(order);
+            
+            // Close previous position on this market
+            try{
+                const closingTransaction: any = await this.closePosition(order.market);
+                console.log(closingTransaction);
+                await this.discord.sendMessageClosePosition(order.market, closingTransaction);
+            } catch(e: any) {
+                // Can be case of no position to close
+                await this.discord.sendError(e);
+            }
+            
+            const orderTransaction: any = await this.placeOrder(order);
+            console.log(orderTransaction);
+            await this.discord.sendMessageOrder(order, orderTransaction);
             
             // Output
-            const output: Output = new Output(order,transaction);
+            const output: Output = new Output(order);
             console.log("Output "+output);
             response.response_success.body = JSON.stringify({"message": "process done"});
             

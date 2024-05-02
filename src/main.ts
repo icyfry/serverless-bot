@@ -1,5 +1,5 @@
 import { Network } from "@dydxprotocol/v4-client-js";
-import { DydxBot } from "./dydx/dydx-bot";
+import { DYDXBot } from "./dydx/dydx-bot";
 import { BasicStrat } from "./strategy/strat-basic";
 import { APIGatewayProxyEvent, Context } from "aws-lambda";
 import { Bot, Input } from "./bot";
@@ -56,14 +56,11 @@ function DydxHandler(input: Input, context: Context, callback: CallbackResponse)
     } else  { 
         throw new Error("Network not defined");
     }
-    const bot = new DydxBot(network);
+    const bot: DYDXBot = new DYDXBot(network);
 
     bot.connect().then((address: string): void => {
 
         console.log("Connected to dydx with " + address);
-
-        bot.discord.sendMessage("call from "+input.source);
-        bot.discord.sendMessage(JSON.stringify(input.rawData));
 
         bot.process(input, new BasicStrat(), context).then((response: CallbackResponseParams) => {
             exit(callback,response);

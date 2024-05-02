@@ -39,24 +39,29 @@ export class Discord {
         return this.channel.send(this.prefix + message);
     }
 
-    public sendMessageForOrder(order: BotOrder): Promise<Message> {
+    public sendMessageClosePosition(market: string, tx?: any): Promise<Message> {
+        let message = (`❌ Closing position ${market} 🏷️${tx?.hash}`);
+        return this.sendMessage(message);
+    }
+
+    public sendMessageOrder(order: BotOrder, tx?: any): Promise<Message> {
         let icon = "";
         if(order.side == OrderSide.BUY) {
             icon = "🟢";
         } else if(order.side == OrderSide.SELL) {
             icon = "🔴";
         }
-        const message = `${icon} ${order.size} ${order.market} at ${order.price}$`;
+        const message = `${icon} ${order.size} ${order.market} at ${order.price}$ 🏷️${tx?.hash}`;
         return this.sendMessage(message);
     }
 
-    public sendMessageForOutput(output: Output): Promise<Message> {
+    public sendMessageOutput(output: Output): Promise<Message> {
         const message = output.toString();
         return this.sendMessage(message);
     }
 
     public sendError(message: string): Promise<Message> {
-        return this.sendMessage("❌ "+message);
+        return this.sendMessage("⚠️ "+message);
     }
 
 }

@@ -3,10 +3,5 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  /*
-  modulePathIgnorePatterns: ['<rootDir>/node_modules/zlib-sync/'],
-  unmockedModulePathPatterns: [
-    "<rootDir>/node_modules/zlib-sync/",
-  ],
-  */
-};
+  modulePathIgnorePatterns: ['<rootDir>/test/data/']
+}; 

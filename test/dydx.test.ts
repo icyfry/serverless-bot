@@ -2,7 +2,7 @@
 import './__mocks__/discord-client-mock';
 
 import { Network, OrderExecution, OrderSide, OrderType } from "@dydxprotocol/v4-client-js";
-import { DydxBot  } from "../src/dydx/dydx-bot";
+import { DYDXBot  } from "../src/dydx/dydx-bot";
 import { BotOrder, BrokerConfig, Input, InputSource } from "../src/bot";
 import dotenv from 'dotenv';
 import { BasicStrat } from '../src/strategy/strat-basic';
@@ -25,11 +25,11 @@ const TIMEOUT: number = 30000; // ms
 
 describe("dYdX", () => {
 
-  var bot : DydxBot;
+  var bot : DYDXBot;
 
   beforeEach(async () => {
     // jest.resetModules();
-    bot = new DydxBot(Network.testnet());
+    bot = new DYDXBot(Network.testnet());
     bot.getBrokerConfig = jest.fn().mockReturnValue(getBrokerConfig());
     await bot.connect();
     bot.discord.prefix = "[🧪 dydx integration test]";
@@ -55,11 +55,30 @@ describe("dYdX", () => {
     order.size = 0.0005;
     order.price = 10;
     order.side = OrderSide.BUY;
-    await bot.placeOrder(order);
+    await bot.placeOrder(order).then(console.log).catch(console.error);
+  }, TIMEOUT);
+
+  xit("testnet close position", async () => {
+    const market = "BTC-USD";
+
+    // Create position
+    const order = new BotOrder();
+    order.type = OrderType.MARKET
+    order.execution = OrderExecution.DEFAULT
+    order.execution = OrderExecution.FOK
+    order.market = market;
+    order.size = 0.0005;
+    order.price = 100000;
+    order.side = OrderSide.BUY;
+    await bot.placeOrder(order).then(async (response) => {
+      // CLose
+      await bot.closePosition(market).catch(console.error);
+    }).catch(console.error);
+
   }, TIMEOUT);
 
   it("dryrun", async () => {
-    const input : Input = {rawData:"{}", roundingFactor:1000, dryrun:true, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.Mock ,details:{action:"SELL",limit:50000}};
+    const input : Input = {roundingFactor:1000, dryrun:true, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.Mock ,details:{action:"SELL",limit:50000}};
     let response = await bot.process(input, new BasicStrat(), undefined);
     expect(response.response_error).not.toBe(null);
     expect(response.response_success).toBe(null);

@@ -28,12 +28,12 @@ describe("discord", () => {
 
   it("order message to discord", async () => {
     const order = new BotOrder();
-    d.sendMessageForOrder(order);
+    d.sendMessageOrder(order);
   }, TIMEOUT);
 
   it("output message to discord", async () => {
-    const output = new Output(new BotOrder(), {hash: "0x123"});
-    d.sendMessageForOutput(output);
+    const output = new Output(new BotOrder());
+    d.sendMessageOutput(output);
   }, TIMEOUT);
 
 });
