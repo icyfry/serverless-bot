@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits, Message, TextChannel } from "discord.js";
+import { Client, ColorResolvable, EmbedBuilder, Events, GatewayIntentBits, Message, TextChannel } from "discord.js";
 import { BotOrder, Output } from "../bot";
 import { OrderSide } from "@dydxprotocol/v4-client-js";
 
@@ -39,20 +39,59 @@ export class Discord {
         return this.channel.send(this.prefix + message);
     }
 
+    public sendEmbedMessage(embed: EmbedBuilder): Promise<Message> {
+        if(this.channel === undefined) throw new Error("Channel not initialized");
+        if(!this.client?.isReady) throw new Error("Client not ready");
+        return this.channel.send({ embeds: [embed] });
+    }
+
+    private getTxEmbedField(tx: any): any {
+        let hash: string = tx?.hash;
+        if (tx?.hash instanceof Uint8Array) {
+            let decoder = new TextDecoder();
+            hash = decoder.decode(tx?.hash);
+        }
+        return { name: `${hash} 🏷️`, value: `[see on mintscan.io](https://www.mintscan.io/dydx/tx/${hash})`, inline: true };
+    }
+
     public sendMessageClosePosition(market: string, tx?: any): Promise<Message> {
-        let message = (`❌ Closing position ${market} 🏷️${tx?.hash}`);
-        return this.sendMessage(message);
+
+        const embed = new EmbedBuilder()
+        //.setAuthor({ name: `${process.env.LAMBDA_VERSION}`})
+        .setTitle(`${market}`)
+        .setColor(0x404040)
+        .setDescription(`❌ Close position`)
+        .setTimestamp();
+
+        // if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
+        
+        return this.sendEmbedMessage(embed);
+
     }
 
     public sendMessageOrder(order: BotOrder, tx?: any): Promise<Message> {
-        let icon = "";
-        if(order.side == OrderSide.BUY) {
-            icon = "🟢";
-        } else if(order.side == OrderSide.SELL) {
-            icon = "🔴";
+        
+        // Color of the embed
+        let color: ColorResolvable;
+        if (order.side == OrderSide.BUY) {
+            color = 0x00FF7F;
+        } else if (order.side == OrderSide.SELL) {
+            color = 0xFF0000;
+        } else {
+            color = 0x000000;
         }
-        const message = `${icon} ${order.size} ${order.market} at ${order.price}$ 🏷️${tx?.hash}`;
-        return this.sendMessage(message);
+
+        const embed = new EmbedBuilder()
+            //.setAuthor({ name: `${process.env.LAMBDA_VERSION}`})
+            .setTitle(`${order.market}`)
+            .setColor(color)
+            .setDescription(`**${order.size}** ${order.market} at **${order.price}** $ (${order.price*order.size} $)`)
+            .setTimestamp();
+
+        // if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
+        
+        return this.sendEmbedMessage(embed);
+        
     }
 
     public sendMessageOutput(output: Output): Promise<Message> {

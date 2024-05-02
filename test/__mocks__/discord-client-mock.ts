@@ -13,12 +13,19 @@ jest.mock('discord.js', () => {
             fetch: jest.fn().mockResolvedValue({
               id: '1234',
               name: 'channel-name',
-              send: jest.fn().mockImplementation((message) => {
-                console.log("send to discord: " + message);
-              })
+              send: jest.fn().mockImplementation((message) => {})
             })
           },
       }}),
+      EmbedBuilder: jest.fn().mockImplementation(() => {
+        return {
+          setTitle: jest.fn().mockReturnThis(),
+          setColor: jest.fn().mockReturnThis(),
+          setDescription: jest.fn().mockReturnThis(),
+          setTimestamp: jest.fn().mockReturnThis(),
+          addFields: jest.fn().mockReturnThis()
+        };
+      }),
       Events: { ClientReady : "ready" },
       GatewayIntentBits: jest.fn().mockImplementation(() => {
         return {

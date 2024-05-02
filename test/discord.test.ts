@@ -1,9 +1,10 @@
 // Mock discord client
-import './__mocks__/discord-client-mock';
+//import './__mocks__/discord-client-mock';
 
 import dotenv from 'dotenv';
 import { BotOrder, Output } from '../src/bot';
 import { Discord } from '../src/communication/discord';
+import { OrderSide } from '@dydxprotocol/v4-client-js';
 
 dotenv.config();
 
@@ -28,12 +29,23 @@ describe("discord", () => {
 
   it("order message to discord", async () => {
     const order = new BotOrder();
-    d.sendMessageOrder(order);
+    order.price = 1000;
+    order.size = 0.1;
+    order.side = OrderSide.SELL;
+    d.sendMessageOrder(order,{hash: "0x1234"});
   }, TIMEOUT);
 
   it("output message to discord", async () => {
     const output = new Output(new BotOrder());
     d.sendMessageOutput(output);
+  }, TIMEOUT);
+
+  it("error message to discord", async () => {
+    d.sendError("error message");
+  }, TIMEOUT);
+
+  it("close position message to discord", async () => {
+    d.sendMessageClosePosition("BTC-USD",{hash: "0x1234"})
   }, TIMEOUT);
 
 });
