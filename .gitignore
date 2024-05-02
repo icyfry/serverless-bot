@@ -49,6 +49,7 @@ jspm_packages/
 .env.production.local
 .env.local
 .env.testnet
+.env.mainnet
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
