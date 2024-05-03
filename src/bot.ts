@@ -9,11 +9,11 @@ import { CallbackResponseParams } from './main';
  * Input of the bot
  */
 export class Input {
-    public market: string = "BTC-USD";
-    public price: number = 0;
+    public market = "BTC-USD";
+    public price = 0;
     public source: InputSource = InputSource.Mock;
     public details: InputDetails = {};
-    public emitKey: string = "nokey";
+    public emitKey = "nokey";
     public dryrun = false;
     public roundingFactor = 100000000; // 8 decimals
     constructor(event: string) {

@@ -14,7 +14,7 @@ dotenv.config();
 
 describe("basic strat", () => {
   
-  var strat : BasicStrat = new BasicStrat();
+  let strat : BasicStrat;
 
   beforeEach(() => {
     strat = new BasicStrat();

@@ -31,7 +31,7 @@ export class DYDXBot extends Bot {
     public subaccount?: SubaccountClient;
     public wallet?: LocalWallet;
 
-    private SUBACCOUNT_NUMBER: number = 0;
+    private SUBACCOUNT_NUMBER = 0;
 
     constructor(network: Network) {
         super();

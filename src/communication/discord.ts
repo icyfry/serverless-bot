@@ -50,7 +50,7 @@ export class Discord {
     private getTxEmbedField(tx: any): any {
         let hash: string = tx?.hash;
         if (tx?.hash instanceof Uint8Array) {
-            let decoder = new TextDecoder();
+            const decoder = new TextDecoder();
             hash = decoder.decode(tx?.hash);
         }
         return { name: `${hash} 🏷️`, value: `[see on mintscan.io](https://www.mintscan.io/dydx/tx/${hash})`, inline: true };

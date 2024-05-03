@@ -25,7 +25,7 @@ const TIMEOUT: number = 20000; // ms
 
 describe("dYdX", () => {
 
-  var bot : DYDXBot;
+  let bot : DYDXBot;
 
   beforeEach(async () => {
     // jest.resetModules();

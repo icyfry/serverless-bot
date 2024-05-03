@@ -2,7 +2,7 @@
 import './__mocks__/discord-client-mock';
 
 import dotenv from 'dotenv';
-import { BotOrder, Input, InputSource, Output } from '../src/bot';
+import { BotOrder, Input, Output } from '../src/bot';
 import { Discord } from '../src/communication/discord';
 import { OrderSide } from '@dydxprotocol/v4-client-js';
 import { BasicStrat } from '../src/strategy/strat-basic';
@@ -13,7 +13,7 @@ describe("discord", () => {
   
   const TIMEOUT: number = 29000; // ms
   const DISCORD_PREFIX = "[🧪 discord integration test]";
-  var d: Discord;
+  let d: Discord;
 
   beforeEach(async () => {
     d = new Discord(DISCORD_PREFIX);
