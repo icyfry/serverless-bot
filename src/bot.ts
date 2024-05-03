@@ -178,8 +178,7 @@ export abstract class Bot {
             
             // Close previous position on this market
             try{
-                const closingTransaction: any = await this.closePosition(order.market, order.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY, order.price);
-                console.log(closingTransaction);
+                const closingTransaction: any = await this.closePosition(order.market, order.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY);
                 await this.discord.sendMessageClosePosition(order.market, closingTransaction.position, closingTransaction.tx);
             } catch(e: any) {
                 // Position not closed
@@ -188,7 +187,6 @@ export abstract class Bot {
             }
             
             const orderTransaction: any = await this.placeOrder(order);
-            console.log(orderTransaction);
             await this.discord.sendMessageOrder(order, input, strategy, orderTransaction);
             
             // Output

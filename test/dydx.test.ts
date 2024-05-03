@@ -1,13 +1,11 @@
 // Mock discord client
 import './__mocks__/discord-client-mock';
 
-import { Network, OrderExecution, OrderSide, OrderType } from "@dydxprotocol/v4-client-js";
-import { DYDXBot, TxResponse  } from "../src/dydx/dydx-bot";
+import { FaucetApiHost, FaucetClient, Network, OrderExecution, OrderSide, OrderType } from "@dydxprotocol/v4-client-js";
+import { DYDXBot} from "../src/dydx/dydx-bot";
 import { BotOrder, BrokerConfig, Input, InputSource } from "../src/bot";
 import dotenv from 'dotenv';
 import { BasicStrat } from '../src/strategy/strat-basic';
-import { time } from 'console';
-import { CallbackResponseParams } from '../src/main';
 
 dotenv.config();
 
@@ -57,7 +55,7 @@ describe("dYdX", () => {
     order.size = 0.0001;
     order.price = 10;
     order.side = OrderSide.BUY;
-    await bot.placeOrder(order).catch(console.error);
+    await bot.placeOrder(order);
   }, TIMEOUT);
 
   xit("testnet open and close position", async () => {
@@ -96,6 +94,12 @@ describe("dYdX", () => {
     catch(e: unknown){
       expect((e as Error).message).toBe("dryrun : process not executed");
     }
+  });
+
+  xit("testnet faucet", async () => {
+    // add faucet to testnet
+    const faucetClient = new FaucetClient(FaucetApiHost.TESTNET);
+    if(bot.subaccount !== undefined) await faucetClient?.fill(bot.subaccount.address, 0, 2000).catch(console.error).then(console.log);
   });
 
 });

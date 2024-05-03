@@ -63,7 +63,7 @@ export class DYDXBot extends Bot {
         }
         this.wallet = await LocalWallet.fromMnemonic(walletMnemonic, BECH32_PREFIX);
         this.subaccount = new SubaccountClient(this.wallet, this.SUBACCOUNT_NUMBER);
-         
+        
         return this.subaccount.address;
 
     }
@@ -100,8 +100,8 @@ export class DYDXBot extends Bot {
         closingOrder.size = position.size;
         if(refPrice !== undefined) {
             closingOrder.type = OrderType.LIMIT;
-            closingOrder.price = (closingOrder.side === OrderSide.BUY ? refPrice*1.1 : refPrice*0.9);
-            closingOrder.goodTillTime = 60;
+            closingOrder.price = (closingOrder.side === OrderSide.BUY ? refPrice*1.5 : refPrice*0.75);
+            closingOrder.goodTillTime = 120;
             closingOrder.timeInForce = OrderTimeInForce.IOC;
         }
         else {

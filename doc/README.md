@@ -1,6 +1,6 @@
 # Technical documentation
 
-## Alerts json body
+## Lambda inputs
 
 ```json
 {

@@ -26,6 +26,6 @@ tasks:
   build-and-deploy:
     cmds:
       - pnpm run build
-      - cd build && zip -r serverless-trd-bot.zip .
-      - cd build && aws s3 sync . s3://{{.LAMBDA_S3}}/{{.LAMBDA_VERSION}} --exclude "*" --include "serverless-trd-bot.zip"
-      - aws lambda update-function-code --function-name {{.LAMBDA_ARN}} --region eu-west-1 --s3-bucket {{.LAMBDA_S3}} --s3-key {{.LAMBDA_VERSION}}/serverless-trd-bot.zip
+      - cd build && zip -r {{.ZIP_FILE_NAME}} .
+      - cd build && aws s3 sync . s3://{{.LAMBDA_S3}}/{{.LAMBDA_VERSION}} --exclude "*" --include "{{.ZIP_FILE_NAME}}"
+      - aws lambda update-function-code --function-name {{.LAMBDA_ARN}} --region eu-west-1 --s3-bucket {{.LAMBDA_S3}} --s3-key {{.LAMBDA_VERSION}}/{{.ZIP_FILE_NAME}}

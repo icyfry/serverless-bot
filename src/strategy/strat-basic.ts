@@ -26,6 +26,7 @@ export class BasicStrat extends Strat {
         order.size = Math.round((this.R / input.price)*input.roundingFactor)/input.roundingFactor;
 
         switch(input.source) { 
+            
             case InputSource.SuperTrend: {
                 const details = input.details as SuperTrendDetails;
                 order.price = details.limit;
@@ -63,6 +64,13 @@ export class BasicStrat extends Strat {
         }
 
         return order;
+    }
+
+    /**
+     * @see Strat
+     */
+    public getName(): string {
+        return "Basic Strategy"
     }
 
 }

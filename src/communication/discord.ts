@@ -65,7 +65,7 @@ export class Discord {
         .setDescription(`❌ Close position`)
         .setTimestamp();
 
-        if (position !== undefined) embed.addFields({ name: `pnl`, value: `${position.realizedPnl+position.unrealizedPnl} $`, inline: true });
+        if (position !== undefined) embed.addFields({ name: `pnl`, value: `${position.realizedPnl}/${position.unrealizedPnl}`, inline: true });
 
         // if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
         
