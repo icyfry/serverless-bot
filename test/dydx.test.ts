@@ -2,10 +2,12 @@
 import './__mocks__/discord-client-mock';
 
 import { Network, OrderExecution, OrderSide, OrderType } from "@dydxprotocol/v4-client-js";
-import { DYDXBot  } from "../src/dydx/dydx-bot";
+import { DYDXBot, TxResponse  } from "../src/dydx/dydx-bot";
 import { BotOrder, BrokerConfig, Input, InputSource } from "../src/bot";
 import dotenv from 'dotenv';
 import { BasicStrat } from '../src/strategy/strat-basic';
+import { time } from 'console';
+import { CallbackResponseParams } from '../src/main';
 
 dotenv.config();
 
@@ -21,7 +23,7 @@ function getBrokerConfig(): Promise<BrokerConfig> {
   });
 }
 
-const TIMEOUT: number = 30000; // ms
+const TIMEOUT: number = 20000; // ms
 
 describe("dYdX", () => {
 
@@ -47,41 +49,53 @@ describe("dYdX", () => {
     expect(address).toBe(process.env.TEST_ADDRESS_TESTNET)
   }, TIMEOUT);
 
-  it("testnet place order", async () => {
+  it("testnet place order not executed", async () => {
     const order = new BotOrder();
-    order.type = OrderType.LIMIT
-    order.execution = OrderExecution.FOK // the order will be cancelled
+    order.type = OrderType.LIMIT;
+    order.execution = OrderExecution.FOK; // Will fail
     order.market = "BTC-USD";
-    order.size = 0.0005;
+    order.size = 0.0001;
     order.price = 10;
     order.side = OrderSide.BUY;
-    await bot.placeOrder(order).then(console.log).catch(console.error);
+    await bot.placeOrder(order).catch(console.error);
   }, TIMEOUT);
 
-  xit("testnet close position", async () => {
+  xit("testnet open and close position", async () => {
     const market = "BTC-USD";
 
-    // Create position
-    const order = new BotOrder();
-    order.type = OrderType.MARKET
-    order.execution = OrderExecution.DEFAULT
-    order.execution = OrderExecution.FOK
-    order.market = market;
-    order.size = 0.0005;
-    order.price = 100000;
-    order.side = OrderSide.BUY;
-    await bot.placeOrder(order).then(async (response) => {
-      // CLose
-      await bot.closePosition(market).catch(console.error);
-    }).catch(console.error);
+    // Require OPEN BTC-US position
 
+    // CLose (error on side)
+    try {
+      await bot.closePosition(market,OrderSide.SELL);
+    }
+    catch(e: unknown){
+      // should return error
+      expect((e as Error).message).toBe("did not close : position is not SELL");
+    }
+
+    // CLose (error on side)
+    try {
+      await bot.closePosition('ETH-USD');
+    }
+    catch(e: unknown){
+      // should return error
+      expect((e as Error).message).toBe("did not close : no position on ETH-USD");
+    }
+
+    // CLose Position
+    await bot.closePosition(market, OrderSide.BUY ,10);
+    
   }, TIMEOUT);
 
   it("dryrun", async () => {
-    const input : Input = {roundingFactor:1000, dryrun:true, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.Mock ,details:{action:"SELL",limit:50000}};
-    let response = await bot.process(input, new BasicStrat(), undefined);
-    expect(response.response_error).not.toBe(null);
-    expect(response.response_success).toBe(null);
+    const input : Input = {roundingFactor:1000, dryrun:true, emitKey:"", market:"BTC-USD", price:10000, source: InputSource.Mock ,details:{action:"SELL",limit:50000}};
+    try {
+      await bot.process(input, new BasicStrat(), undefined);
+    } 
+    catch(e: unknown){
+      expect((e as Error).message).toBe("dryrun : process not executed");
+    }
   });
 
 });

@@ -42,7 +42,7 @@ export class MockBot extends Bot {
     /**
      * @see Bot
      */
-    public closePosition(market: string): Promise<void> {
+    public closePosition(market: string): Promise<{tx: any, position: any}> {
         // Longs
         if(this.openPositonsLongs.has(market)) {
             // Add order value to balance
@@ -57,7 +57,7 @@ export class MockBot extends Bot {
             // Close order
             this.openPositonsShorts.delete(market);
         }
-        return Promise.resolve();
+        return Promise.resolve({tx: {},  position: {}});
     }
 
     /**

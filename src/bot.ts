@@ -83,6 +83,9 @@ export abstract class Bot {
     static readonly NETWORK_MAINNET: string = "mainnet";
     static readonly NETWORK_TESTNET: string = "testnet";
 
+    static readonly SIDE_LONG: string = "LONG";
+    static readonly SIDE_SHORT: string = "SHORT";
+
     // Discord interactions
     public discord: Discord;
 
@@ -95,14 +98,16 @@ export abstract class Bot {
      * @param order Order to place
      * @returns transaction response
      */
-    public abstract placeOrder(order:BotOrder ): Promise<any>;
+    public abstract placeOrder(order:BotOrder): Promise<any>;
 
     /**
      * Close a position on the exchange
      * @param market the market to close
-     * @returns transaction response
+     * @param hasToBeSide the side the position has to be before closing (LONG or SHORT)
+     * @param refPrice reference price to close the position
+     * @returns transaction response and position closed
      */
-    public abstract closePosition(market: string): Promise<any>;
+    public abstract closePosition(market: string, hasToBeSide?: OrderSide, refPrice?: number): Promise<{tx: any, position: any}>;
     
     /**
      * Connect to the exchange
@@ -173,17 +178,18 @@ export abstract class Bot {
             
             // Close previous position on this market
             try{
-                const closingTransaction: any = await this.closePosition(order.market);
+                const closingTransaction: any = await this.closePosition(order.market, order.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY, order.price);
                 console.log(closingTransaction);
-                await this.discord.sendMessageClosePosition(order.market, closingTransaction);
+                await this.discord.sendMessageClosePosition(order.market, closingTransaction.position, closingTransaction.tx);
             } catch(e: any) {
-                // Can be case of no position to close
+                // Position not closed
+                console.warn(e);
                 await this.discord.sendError(e);
             }
             
             const orderTransaction: any = await this.placeOrder(order);
             console.log(orderTransaction);
-            await this.discord.sendMessageOrder(order, orderTransaction);
+            await this.discord.sendMessageOrder(order, input, strategy, orderTransaction);
             
             // Output
             const output: Output = new Output(order);

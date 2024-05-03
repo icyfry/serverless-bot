@@ -1,6 +1,8 @@
 import { Client, ColorResolvable, EmbedBuilder, Events, GatewayIntentBits, Message, TextChannel } from "discord.js";
-import { BotOrder, Output } from "../bot";
+import { BotOrder, Input, Output } from "../bot";
 import { OrderSide } from "@dydxprotocol/v4-client-js";
+import { Position } from "../dydx/dydx-bot";
+import { Strat } from "../strategy/strat";
 
 export class Discord {
 
@@ -54,7 +56,7 @@ export class Discord {
         return { name: `${hash} 🏷️`, value: `[see on mintscan.io](https://www.mintscan.io/dydx/tx/${hash})`, inline: true };
     }
 
-    public sendMessageClosePosition(market: string, tx?: any): Promise<Message> {
+    public sendMessageClosePosition(market: string, position?: Position, tx?: any): Promise<Message> {
 
         const embed = new EmbedBuilder()
         //.setAuthor({ name: `${process.env.LAMBDA_VERSION}`})
@@ -63,13 +65,15 @@ export class Discord {
         .setDescription(`❌ Close position`)
         .setTimestamp();
 
+        if (position !== undefined) embed.addFields({ name: `pnl`, value: `${position.realizedPnl+position.unrealizedPnl} $`, inline: true });
+
         // if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
         
         return this.sendEmbedMessage(embed);
 
     }
 
-    public sendMessageOrder(order: BotOrder, tx?: any): Promise<Message> {
+    public sendMessageOrder(order: BotOrder, input?: Input, strategy?: Strat, tx?: any): Promise<Message> {
         
         // Color of the embed
         let color: ColorResolvable;
@@ -85,8 +89,10 @@ export class Discord {
             //.setAuthor({ name: `${process.env.LAMBDA_VERSION}`})
             .setTitle(`${order.market}`)
             .setColor(color)
-            .setDescription(`**${order.size}** ${order.market} at **${order.price}** $ (${order.price*order.size} $)`)
+            .setDescription(`${order.side} **${order.size}** ${order.market} at **${order.price}** $ (${order.price*order.size} $)`)
             .setTimestamp();
+
+        if (input !== undefined) embed.addFields({ name: `source`, value: `${input.source}`, inline: true });
 
         // if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
         
