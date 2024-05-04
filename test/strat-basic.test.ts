@@ -1,16 +1,20 @@
-// Mock discord client
-// import './mocks/discord-client-mock';
+// Mock Bot
+import { MockBot } from "./__mocks__/bot-mock";
 
 import { OrderSide} from "@dydxprotocol/v4-client-js";
 import { BotOrder, Input, InputSource } from "../src/bot";
 import { BasicStrat } from "../src/strategy/strat-basic";
 import dotenv from 'dotenv';
-
-// events history for tests
-import { SUPERTREND_HISTORY } from './data/strat-basic-history';
-import { MockBot } from "./__mocks__/bot-mock";
+import fs from 'fs';
+import csvParser from 'csv-parser';
 
 dotenv.config();
+
+// Historical alerts interface
+interface Alert {
+  "Nom" : string;
+  "Description" : string;
+}
 
 describe("basic strat", () => {
   
@@ -62,20 +66,34 @@ describe("basic strat", () => {
     expect(order.size).toBe(16.02597);
   });
 
-  it("basic strat with supertrend", () => {
+  it("replay alerts", async () => {
 
     const INITIAL_BALANCE = 1000;
     const bot: MockBot = new MockBot(INITIAL_BALANCE);
 
-    // Process events in history
-    SUPERTREND_HISTORY.forEach(async ( input: Input ) =>{
-      await bot.process(input, strat, undefined);
+    const alerts: Alert[] = [];
+
+    // Read alerts from csv
+    await new Promise((resolve, reject) => {
+      fs.createReadStream('./test/data/alerts-history.csv')
+        .pipe(csvParser())
+        .on('data', (data: Alert) => {
+          alerts.push(data);
+        })
+        .on('end', resolve)
+        .on('error', reject);
     });
+    
+    // Process alerts
+    for (const alert of alerts) {
+      const input: Input = new Input(alert.Description);
+      await bot.process(input, strat, undefined);
+    }
 
     // Successful strategy
     expect(bot.getFullBalance()).toBeGreaterThan(INITIAL_BALANCE)
 
-    console.log("performance : " + ((bot.getFullBalance()/INITIAL_BALANCE)-1)*100 + " %");
+    console.log("performance : " + ((bot.getFullBalance()/INITIAL_BALANCE)-1)*100 + "%");
 
   });
 

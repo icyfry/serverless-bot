@@ -84,6 +84,12 @@ export class MockBot extends Bot {
         // Last known price
         this.prices.set(order.market, order.price);
 
+        // Position already in place , ignore input
+        if((order.side == OrderSide.BUY && this.openPositonsLongs.has(order.market)) || 
+        (order.side == OrderSide.SELL && this.openPositonsShorts.has(order.market))) {
+            return Promise.resolve({response_error:null, response_success:null});
+        }
+
         // Close previous position
         this.closePosition(order.market);
 
