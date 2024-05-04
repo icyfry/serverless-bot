@@ -1,4 +1,4 @@
-import { Client, ColorResolvable, EmbedBuilder, Events, GatewayIntentBits, Message, TextChannel } from "discord.js";
+import { Client, ColorResolvable, EmbedBuilder, GatewayIntentBits, Message, TextChannel } from "discord.js";
 import { BotOrder, Input, Output } from "../bot";
 import { OrderSide } from "@dydxprotocol/v4-client-js";
 import { Position } from "../dydx/dydx-bot";
@@ -17,11 +17,6 @@ export class Discord {
     public async login(token: string) {
     
         this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
-        // Events
-        this.client.once(Events.ClientReady, readyClient => {
-            // console.log(`Logged to discord in as ${readyClient.user.tag}`);
-        });
 
         // Login to discord
         await this.client.login(token);
@@ -48,12 +43,15 @@ export class Discord {
     }
 
     private getTxEmbedField(tx: any): any {
-        let hash: string = tx?.hash;
+        let hash: string;
         if (tx?.hash instanceof Uint8Array) {
-            const decoder = new TextDecoder();
-            hash = decoder.decode(tx?.hash);
+            hash = Buffer.from(tx?.hash).toString('hex');
         }
-        return { name: `${hash} 🏷️`, value: `[see on mintscan.io](https://www.mintscan.io/dydx/tx/${hash})`, inline: true };
+        else {
+            hash = tx?.hash;
+        }
+        hash = hash.substring(0, 7) + "...";
+        return { name: `tx`, value: `${hash}`, inline: true };
     }
 
     public sendMessageClosePosition(market: string, position?: Position, tx?: any): Promise<Message> {
@@ -65,9 +63,11 @@ export class Discord {
         .setDescription(`❌ Close position`)
         .setTimestamp();
 
-        if (position !== undefined) embed.addFields({ name: `pnl`, value: `${position.realizedPnl}/${position.unrealizedPnl}`, inline: true });
-
-        // if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
+        if (position !== undefined) {
+            const pnl: number = +position.realizedPnl + +position.unrealizedPnl;
+            embed.addFields({ name: `pnl`, value: `${pnl}`, inline: true });
+        }
+        if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
         
         return this.sendEmbedMessage(embed);
 
@@ -92,9 +92,11 @@ export class Discord {
             .setDescription(`${order.side} **${order.size}** ${order.market} at **${order.price}** $ (${order.price*order.size} $)`)
             .setTimestamp();
 
+            embed.addFields({ name: `ttl`, value: `${order.goodTillTime/60} min`, inline: true });
+
         if (input !== undefined) embed.addFields({ name: `source`, value: `${input.source}`, inline: true });
 
-        // if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
+        if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
         
         return this.sendEmbedMessage(embed);
         

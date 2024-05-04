@@ -18,7 +18,7 @@ export class BasicStrat extends Strat {
         order.type = OrderType.LIMIT;
         order.timeInForce = OrderTimeInForce.GTT;
         order.execution = OrderExecution.DEFAULT;
-        order.goodTillTime = 3600; // 1 hour
+        order.goodTillTime = input.interval;
         order.clientId = Date.now();
 
         // Order size (in target currency)

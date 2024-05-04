@@ -87,7 +87,7 @@ describe("dYdX", () => {
   }, TIMEOUT);
 
   it("dryrun", async () => {
-    const input : Input = {roundingFactor:1000, dryrun:true, emitKey:"", market:"BTC-USD", price:10000, source: InputSource.Mock ,details:{action:"SELL",limit:50000}};
+    const input : Input = {roundingFactor:1000, interval:60, dryrun:true, emitKey:"", market:"BTC-USD", price:10000, source: InputSource.Mock ,details:{action:"SELL",limit:50000}};
     try {
       await bot.process(input, new BasicStrat(), undefined);
     } 
@@ -96,10 +96,10 @@ describe("dYdX", () => {
     }
   });
 
-  xit("testnet faucet", async () => {
+  xit("testnet add faucet", async () => {
     // add faucet to testnet
     const faucetClient = new FaucetClient(FaucetApiHost.TESTNET);
-    if(bot.subaccount !== undefined) await faucetClient?.fill(bot.subaccount.address, 0, 2000).catch(console.error).then(console.log);
+    if(bot.subaccount !== undefined) await faucetClient?.fill(bot.subaccount.address, 0, 100).catch(console.error).then(console.log);
   });
 
 });

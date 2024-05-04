@@ -16,6 +16,7 @@ export class Input {
     public emitKey = "nokey";
     public dryrun = false;
     public roundingFactor = 100000000; // 8 decimals
+    public interval = 60; // 1 minute
     constructor(event: string) {
         Object.assign(this, JSON.parse(event));
     }
