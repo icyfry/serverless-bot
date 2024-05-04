@@ -92,24 +92,33 @@ export class DYDXBot extends Bot {
         // Check if position side is correct
         if(hasToBeSide !== undefined && position.side !== (hasToBeSide === OrderSide.BUY ? Bot.SIDE_LONG : Bot.SIDE_SHORT)) throw new Error(`did not close : position is not ${hasToBeSide}`);
 
-        // Market close order
+        // Closing order
         const closingOrder: BotOrder = new BotOrder();
         closingOrder.market = market;
-        if(position.side === Bot.SIDE_LONG) closingOrder.side = OrderSide.SELL;
-        else if(position.side === Bot.SIDE_SHORT) closingOrder.side = OrderSide.BUY;
-        closingOrder.size = position.size;
+        closingOrder.clientId = Date.now();
+        // closingOrder.reduceOnly = true;
+
+        if(position.side === Bot.SIDE_LONG){
+            closingOrder.size = position.size;
+            closingOrder.side = OrderSide.SELL;
+        } 
+        else if(position.side === Bot.SIDE_SHORT) {
+            closingOrder.size = -position.size; // for short position, size is negative
+            closingOrder.side = OrderSide.BUY;
+        }
+
+        // Use a limit order to close the position if a reference price is provided
         if(refPrice !== undefined) {
             closingOrder.type = OrderType.LIMIT;
             closingOrder.price = (closingOrder.side === OrderSide.BUY ? refPrice*1.5 : refPrice*0.75);
-            closingOrder.goodTillTime = 120;
-            closingOrder.timeInForce = OrderTimeInForce.IOC;
+            closingOrder.goodTillTime = 3600;
+            closingOrder.timeInForce = OrderTimeInForce.GTT;
         }
+        // Use a market order to close the position if no reference price is provided
         else {
             closingOrder.type = OrderType.MARKET;
             closingOrder.timeInForce = OrderTimeInForce.FOK;
         }
-        closingOrder.clientId = Date.now();
-        closingOrder.reduceOnly = true;
 
         // Send closing order
         const tx: TxResponse = await this.placeOrder(closingOrder);

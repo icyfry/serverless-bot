@@ -76,7 +76,9 @@ export class Discord {
         if (position !== undefined) {
             const pnl: number = +position.realizedPnl + +position.unrealizedPnl;
             embed.addFields({ name: `pnl`, value: `${pnl}`, inline: true });
+            embed.addFields({ name: `size`, value: `${position.size}`, inline: true });
         }
+        
         if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
         
         return this.sendEmbedMessage(embed);
