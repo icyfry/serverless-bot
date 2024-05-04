@@ -1,45 +1,50 @@
-import { OrderExecution, OrderSide, OrderTimeInForce, OrderType } from '@dydxprotocol/v4-client-js';
 import { GetSecretValueCommand, SecretsManagerClient } from "@aws-sdk/client-secrets-manager";
-import { Context } from 'aws-lambda';
+import { APIGatewayProxyResult, Context } from 'aws-lambda';
 import { Strat } from './strategy/strat';
 import { Discord } from './communication/discord';
 import { CallbackResponseParams } from './main';
+import { BroadcastTxAsyncResponse, BroadcastTxSyncResponse } from '@cosmjs/tendermint-rpc/build/tendermint37';
+import { IndexedTx} from '@cosmjs/stargate';
+import { OrderExecution, OrderSide, OrderTimeInForce, OrderType } from '@dydxprotocol/v4-client-js';
 
-/**
- * Input of the bot
- */
-export class Input {
-    public market = "BTC-USD";
-    public price = 0;
-    public source: InputSource = InputSource.Mock;
-    public details: InputDetails = {};
-    public emitKey = "nokey";
-    public dryrun = false;
-    public roundingFactor = 100000000; // 8 decimals
-    public interval = 60; // 1 minute
-    constructor(event: string) {
-        Object.assign(this, JSON.parse(event));
+// Transaction response
+export type TxResponse = BroadcastTxAsyncResponse | BroadcastTxSyncResponse | IndexedTx;
+
+// Error that should not interrupt the bot
+export class Warning extends Error {
+    constructor(message?: string) {
+      super(message);
+      this.name = 'Warning';
     }
 }
 
-/**
- * Output of the bot
- */
-export class Output {
-    public order: BotOrder;
-    constructor(order: BotOrder) {
-        this.order = order;
-    }
-    toString() : string { return JSON.stringify(
-        {
-            "order" : this.order,
-        },
-    null, 2); }
+// Configuration of the broker connected to the bot
+export interface BrokerConfig {
+    TESTNET_MNEMONIC: string;
+    MAINNET_MNEMONIC: string;
+    DISCORD_TOKEN: string;
 }
 
-/**
- * Trade order
- */
+// A position on the broker
+export interface Position {
+    market: string,
+    status: string,
+    side: string,
+    size: number,
+    maxSize: number,
+    entryPrice: number,
+    exitPrice: number,
+    realizedPnl: number, // in usd
+    unrealizedPnl: number, // in usd
+    createdAt: Date,
+    createdAtHeight: number,
+    closedAt: Date,
+    sumOpen: number, // in crypto
+    sumClose: number, // in crypto
+    netFunding: number
+}
+
+// An order to place on the broker
 export class BotOrder {
     public market = "BTC-USD"; // perpertual market id
     public type:OrderType  = OrderType.LIMIT; // order type
@@ -55,30 +60,68 @@ export class BotOrder {
     public goodTillTime = 86400; // goodTillTime in seconds
 }
 
-export interface BrokerConfig {
-    TESTNET_MNEMONIC: string;
-    MAINNET_MNEMONIC: string;
-    DISCORD_TOKEN: string;
+// Output of the bot
+export class Output {
+    public order: BotOrder;
+    constructor(order: BotOrder) {
+        this.order = order;
+    }
+    toString() : string { return JSON.stringify(
+        {
+            "order" : this.order,
+        },
+    null, 2); }
 }
 
+// Input of the bot
+export class Input {
+    public market = "BTC-USD";
+    public price = 0;
+    public source: InputSource = InputSource.Mock;
+    public details: InputDetails = {};
+    public emitKey = "nokey";
+    public dryrun = false;
+    public roundingFactor = 100000000; // 8 decimals
+    public interval = 60; // 1 minute
+    constructor(event: string) {
+        Object.assign(this, JSON.parse(event));
+        // Rounding the prices
+        this.price = Math.round(this.price*100)/100;
+    }
+}
+
+// Commons details of the input
 export interface InputDetails {
+    plots?: string[];
 }
 
-export interface SuperTrendDetails extends InputDetails{
-    action: string; // BUY or SELL
-    limit: number;
-}
-
-export interface SMCDetails extends InputDetails{
-    type: string;
-}
-
+// Available sources of input
 export enum InputSource {
     SuperTrend = "SUPER_TREND",
     SMC = "SMART_MONEY_CONCEPTS",
     Mock = "MOCK"
 }
 
+// Details of the SuperTrend input
+export class SuperTrendDetails implements InputDetails {
+    public action = "BUY"; // BUY or SELL
+    public limit = 0;
+    public plots?: string[] = [];
+    constructor(details: string) {
+        Object.assign(this, JSON.parse(details));
+        // Rounding the prices
+        this.limit = Math.round(this.limit*100)/100;
+    }
+}
+
+// Details of the SMC input
+export interface SMCDetails extends InputDetails{
+    type: string;
+}
+
+/**
+ * Bot abstract class
+ */
 export abstract class Bot {
 
     static readonly NETWORK_MAINNET: string = "mainnet";
@@ -95,38 +138,38 @@ export abstract class Bot {
     }
 
     /**
-     * Place an order on the exchange
+     * Place an order on the broker
      * @param order Order to place
      * @returns transaction response
      */
-    public abstract placeOrder(order:BotOrder): Promise<any>;
+    public abstract placeOrder(order:BotOrder): Promise<TxResponse>;
 
     /**
-     * Close a position on the exchange
+     * Close a position on the broker
      * @param market the market to close
      * @param hasToBeSide the side the position has to be before closing (LONG or SHORT)
-     * @param refPrice reference price to close the position
+     * @param refPrice reference price used to close the position
      * @returns transaction response and position closed
      */
-    public abstract closePosition(market: string, hasToBeSide?: OrderSide, refPrice?: number): Promise<{tx: any, position: any}>;
+    public abstract closePosition(market: string, hasToBeSide?: OrderSide, refPrice?: number): Promise<{tx: TxResponse, position: Position}>;
     
     /**
-     * Connect to the exchange
+     * Connect to the broker
      * @returns address of the connected account
      */
     public abstract connect() : Promise<string>;
 
     /**
-     * Disconnect from the exchange
+     * Disconnect from the broker
      */
     public abstract disconnect(): Promise<void>;
 
     /**
-     * Cancel order
+     * Cancel an order
      * @param market Market to cancel the order
-     * @param clientId id of the order
+     * @param clientId id of the order to cancel
      */
-    public abstract cancelOrdersForMarket(market: string, clientId: number): Promise<any>;
+    public abstract cancelOrdersForMarket(market: string, clientId: number): Promise<TxResponse>;
 
     /**
      * Read config from the AWS Secrets Manager
@@ -149,23 +192,25 @@ export abstract class Bot {
     };
 
     /**
-     * Process the lambda event
+     * Process the lambda input event
      * @param input input of the lambda
      * @param strategy the strategy to apply
-     * @param context the context
+     * @param _context the context
      * @returns the response
      */
     public async process(input: Input, strategy: Strat, context?: Context): Promise<CallbackResponseParams> {
 
+        console.log(context?.awsRequestId);
+
         // Return of the process
         const response: CallbackResponseParams = {
-            response_error: null,
+            response_error: undefined,
             response_success: {
                 statusCode: 200,
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                 },
-                body: {"message": "no message"}
+                body: '{"message": "no message"}'
             }
         };
 
@@ -176,30 +221,32 @@ export abstract class Bot {
 
             // Order
             const order: BotOrder = strategy.getStatelessOrderBasedOnInput(input);
-            
+
             // Close previous position on this market
             try{
-                const closingTransaction: any = await this.closePosition(order.market, order.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY, order.price);
-                await this.discord.sendMessageClosePosition(order.market, closingTransaction.position, closingTransaction.tx);
-            } catch(e: any) {
-                // Position not closed
-                console.warn(e);
-                await this.discord.sendError(e);
+            const closingTransaction: {tx: TxResponse, position: Position} = await this.closePosition(order.market, order.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY, order.price);
+            await this.discord.sendMessageClosePosition(order.market, closingTransaction.position, closingTransaction.tx);
+            } catch(error) {
+                if(error instanceof Warning) {
+                    console.warn(error);
+                    await this.discord.sendError(error); // Position not closed
+                } else throw error;
             }
             
-            const orderTransaction: any = await this.placeOrder(order);
+            // Open new position
+            const orderTransaction: TxResponse = await this.placeOrder(order);
             await this.discord.sendMessageOrder(order, input, strategy, orderTransaction);
             
             // Output
             const output: Output = new Output(order);
             console.log("Output "+output);
-            response.response_success.body = JSON.stringify({"message": "process done"});
+            (response.response_success as APIGatewayProxyResult).body = JSON.stringify({"message": "process done"});
             
         }
-        catch(e: any) {
-            await this.discord.sendError(e);
-            response.response_success=null;
-            response.response_error=new Error(e);
+        catch(error) {
+            await this.discord.sendError(error as Error);
+            response.response_success = undefined;
+            response.response_error= error as Error;
         }
 
         return response;

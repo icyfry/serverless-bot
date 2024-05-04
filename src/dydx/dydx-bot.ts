@@ -1,28 +1,9 @@
 import { BECH32_PREFIX,CompositeClient, LocalWallet, Network, OrderFlags, OrderSide, OrderTimeInForce, OrderType, SubaccountClient } from "@dydxprotocol/v4-client-js";
-import { BotOrder, Bot, BrokerConfig } from "../bot";
-import { BroadcastTxAsyncResponse, BroadcastTxSyncResponse } from '@cosmjs/tendermint-rpc/build/tendermint37';
-import { IndexedTx} from '@cosmjs/stargate';
+import { BotOrder, Bot, BrokerConfig, Warning, TxResponse, Position } from "../bot";
 
-export interface Position {
-    market: string,
-    status: string,
-    side: string,
-    size: number,
-    maxSize: number,
-    entryPrice: number,
-    exitPrice: number,
-    realizedPnl: number, // in usd
-    unrealizedPnl: number, // in usd
-    createdAt: Date,
-    createdAtHeight: number,
-    closedAt: Date,
-    sumOpen: number, // in crypto
-    sumClose: number, // in crypto
-    netFunding: number
-}
-
-export type TxResponse = BroadcastTxAsyncResponse | BroadcastTxSyncResponse | IndexedTx;
-
+/**
+ * Bot implementation for dYdX
+ */
 export class DYDXBot extends Bot {
 
     public client?: CompositeClient;
@@ -87,7 +68,7 @@ export class DYDXBot extends Bot {
         const position: Position | undefined = await this.client.indexerClient.account.getSubaccountPerpetualPositions(this.subaccount.address, this.SUBACCOUNT_NUMBER).then((result) => {
             return result.positions.find((position: Position) => position.market === market && position.status === "OPEN");
         });
-        if(position === undefined) throw new Error(`Trying to close a positon that does not exist on ${market}`);
+        if(position === undefined) throw new Warning(`Trying to close a positon that does not exist on ${market}`);
 
         // Check if position side is correct
         if(hasToBeSide !== undefined && position.side !== (hasToBeSide === OrderSide.BUY ? Bot.SIDE_LONG : Bot.SIDE_SHORT)) throw new Error(`Trying to close a positon on ${market} but the position is already on the target side ${position.side}`);
@@ -96,8 +77,7 @@ export class DYDXBot extends Bot {
         const closingOrder: BotOrder = new BotOrder();
         closingOrder.market = market;
         closingOrder.clientId = Date.now();
-        // closingOrder.reduceOnly = true;
-
+        
         if(position.side === Bot.SIDE_LONG){
             closingOrder.size = position.size;
             closingOrder.side = OrderSide.SELL;
@@ -118,6 +98,7 @@ export class DYDXBot extends Bot {
         else {
             closingOrder.type = OrderType.MARKET;
             closingOrder.timeInForce = OrderTimeInForce.FOK;
+            closingOrder.reduceOnly = true;
         }
 
         // Send closing order

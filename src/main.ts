@@ -1,19 +1,21 @@
 import { Network } from "@dydxprotocol/v4-client-js";
 import { DYDXBot } from "./dydx/dydx-bot";
 import { BasicStrat } from "./strategy/strat-basic";
-import { APIGatewayProxyEvent, Context } from "aws-lambda";
+import { APIGatewayProxyCallback, APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import { Bot, Input } from "./bot";
 
+/**
+ * Response parameters for the APIGateway callback
+ */
 export interface CallbackResponseParams {
-    response_error: Error|null;
-    response_success: any;
+    response_error?: Error;
+    response_success?: APIGatewayProxyResult;
 }
-export type CallbackResponse = (response_error: Error|null, response_success: any) => any;
 
 /**
  * Main handler for the lambda function
  */
-exports.handler = function (event: APIGatewayProxyEvent, context: Context, callback: CallbackResponse) {
+exports.handler = function (event: APIGatewayProxyEvent, context: Context, callback: APIGatewayProxyCallback) {
   
     console.log(`Event: ${JSON.stringify(event, null, 2)}`);
     console.log(`Context: ${JSON.stringify(context, null, 2)}`);
@@ -34,7 +36,7 @@ exports.handler = function (event: APIGatewayProxyEvent, context: Context, callb
         }
 
     } 
-    catch(e: any) {
+    catch(e) {
         console.error(e);
         exit(callback, {response_error: new Error("Error"), response_success:undefined} );
     }
@@ -46,12 +48,12 @@ exports.handler = function (event: APIGatewayProxyEvent, context: Context, callb
  * @param callback callback function
  * @param response content returned by the bot
  */
-function exit(callback: CallbackResponse, response: CallbackResponseParams) {
+function exit(callback: APIGatewayProxyCallback, response: CallbackResponseParams) {
     console.log(response);
     callback(response.response_error, response.response_success);
 }
 
-function DydxHandler(input: Input, context: Context, callback: CallbackResponse) {
+function DydxHandler(input: Input, context: Context, callback: APIGatewayProxyCallback) {
 
     let network: Network;
     
@@ -71,13 +73,15 @@ function DydxHandler(input: Input, context: Context, callback: CallbackResponse)
 
         bot.process(input, new BasicStrat(), context).then((response: CallbackResponseParams) => {
             exit(callback,response);
-        }).catch((e: any): void => {
-            throw new Error(e);
+        }).catch((e: Error): void => {
+            throw e;
         }).finally  ((): void => {
             bot.disconnect();       
         });
 
-    }).catch((e: any): void => {
+    }).catch((e: Error): void => {
+        console.error(e);
+        // Return generic error in the body
         exit(callback, {response_error: new Error("Error"), response_success:undefined} );
     });
 

@@ -87,7 +87,7 @@ export class MockBot extends Bot {
         // Position already in place , ignore input
         if((order.side == OrderSide.BUY && this.openPositonsLongs.has(order.market)) || 
         (order.side == OrderSide.SELL && this.openPositonsShorts.has(order.market))) {
-            return Promise.resolve({response_error:null, response_success:null});
+            return Promise.resolve({response_error:undefined, response_success:undefined});
         }
 
         // Close previous position
@@ -96,7 +96,7 @@ export class MockBot extends Bot {
         // Open new position
         this.placeOrder(order);
 
-        return Promise.resolve({response_error:null, response_success:null});
+        return Promise.resolve({response_error:undefined, response_success:undefined});
 
     }
 

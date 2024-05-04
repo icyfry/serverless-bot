@@ -35,7 +35,7 @@ describe("discord", () => {
     order.price = 1000;
     order.size = 0.1;
     order.side = OrderSide.SELL;
-    d.sendMessageOrder(order, new Input("{}"), new BasicStrat(), {hash: "0x1234"});
+    d.sendMessageOrder(order, new Input("{}"), new BasicStrat(), undefined);
   }, TIMEOUT);
 
   it("output message to discord", async () => {
@@ -44,7 +44,7 @@ describe("discord", () => {
   }, TIMEOUT);
 
   it("error message to discord", async () => {
-    d.sendError("error message");
+    d.sendError(new Error("error message"));
   }, TIMEOUT);
 
   it("close position message to discord", async () => {
@@ -64,7 +64,7 @@ describe("discord", () => {
       sumOpen: 0.1,
       sumClose: 0.1,
       netFunding: 0
-    },{hash: "0x1234"})
+    },undefined)
   }, TIMEOUT);
 
 });

@@ -1,9 +1,16 @@
 import { Client, ColorResolvable, EmbedBuilder, GatewayIntentBits, Message, TextChannel } from "discord.js";
-import { BotOrder, Input, Output } from "../bot";
+import { BotOrder, Position, Input, Output, Warning } from "../bot";
 import { OrderSide } from "@dydxprotocol/v4-client-js";
-import { Position } from "../dydx/dydx-bot";
 import { Strat } from "../strategy/strat";
+import { BroadcastTxAsyncResponse, BroadcastTxSyncResponse } from "@cosmjs/tendermint-rpc";
+import { IndexedTx } from "@cosmjs/stargate";
 
+// Transaction response
+type TxResponse = BroadcastTxAsyncResponse | BroadcastTxSyncResponse | IndexedTx;
+
+/**
+ * Discord interactions
+ */
 export class Discord {
 
     public client?: Client;
@@ -19,7 +26,10 @@ export class Discord {
 
     }
 
-    private getTxEmbedField(tx: any): any {
+    /**
+     * Get the tx embed field
+     */
+    private getTxEmbedField(tx: TxResponse): {name: string, value: string, inline: boolean} {
         let hash: string;
         if (tx?.hash instanceof Uint8Array) {
             hash = Buffer.from(tx?.hash).toString('hex');
@@ -31,7 +41,7 @@ export class Discord {
         return { name: `tx`, value: `${hash}`, inline: true };
     }
 
-    private getChaoslabsUrl(address: string,subAccount: number): any {
+    private getChaoslabsUrl(address: string,subAccount: number): string {
         return `https://community.chaoslabs.xyz/dydx-v4/risk/accounts/${address}/subAccount/${subAccount}/overview`;
     }
 
@@ -53,6 +63,9 @@ export class Discord {
 
     }
 
+    /**
+     * Disconnect from discord
+     */
     public async logout(): Promise<void> {
         if(this.client === undefined) throw new Error("Client not initialized");
         this.client.removeAllListeners();
@@ -76,8 +89,8 @@ export class Discord {
         if(!this.client?.isReady) throw new Error("Client not ready");
         return this.channel.send({ embeds: [embed] });
     }
-
-    public sendMessageClosePosition(market: string, position: Position, tx?: any): Promise<Message> {
+    
+    public sendMessageClosePosition(market: string, position: Position, tx?: TxResponse): Promise<Message> {
 
         const embed = new EmbedBuilder()
         .setTitle(`${market}`)
@@ -96,11 +109,11 @@ export class Discord {
         // Performance at close
         const perf = Math.round((pnl/(position.sumOpen * position.entryPrice))*100)/100;
         let perfIcon: string;
-        if(perf > -0.02 && perf < 0.01) {
+        if(perf > -0.02 && perf < 0.02) {
             perfIcon = "😑";
-        }else if(perf >= 0.05) {
+        }else if(perf >= 0.1) {
             perfIcon = "🚀";
-        }else if(perf <= -0.02) {
+        }else if(perf <= -0.05) {
             perfIcon = "😡";
         }else {
             perfIcon = "😐";
@@ -114,7 +127,7 @@ export class Discord {
 
     }
 
-    public sendMessageOrder(order: BotOrder, input?: Input, strategy?: Strat, tx?: any): Promise<Message> {
+    public sendMessageOrder(order: BotOrder, input?: Input, strategy?: Strat, tx?: TxResponse): Promise<Message> {
         
         // Color of the embed
         let color: ColorResolvable;
@@ -127,7 +140,7 @@ export class Discord {
         }
 
         // size in USD
-        let usdSize = Math.round((order.price*order.size)*100)/100;
+        const usdSize = Math.round((order.price*order.size)*100)/100;
 
         const embed = new EmbedBuilder()
         .setTitle(`${order.market}`)
@@ -155,8 +168,9 @@ export class Discord {
         return this.sendMessage(message);
     }
 
-    public sendError(message: string): Promise<Message> {
-        return this.sendMessage("⚠️ "+message);
+    public sendError(message: Error): Promise<Message> {
+        if(message instanceof Warning) return this.sendMessage("⚠️ "+message);
+        else return this.sendMessage("❌ "+message);
     }
 
 }
