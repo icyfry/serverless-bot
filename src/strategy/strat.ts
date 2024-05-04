@@ -1,5 +1,8 @@
 import { BotOrder, Input } from "../bot";
 
+/**
+ * Strategy to be executed by the bot
+ */
 export abstract class Strat {
     
     /**

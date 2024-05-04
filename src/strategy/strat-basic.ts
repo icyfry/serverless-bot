@@ -2,6 +2,9 @@ import { OrderExecution, OrderSide, OrderTimeInForce, OrderType } from "@dydxpro
 import { BotOrder, Input, InputSource, SMCDetails, SuperTrendDetails } from "../bot";
 import { Strat } from "./strat";
 
+/**
+ * Simple stateless strategy
+ */
 export class BasicStrat extends Strat {
     
     // Order size in USD

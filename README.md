@@ -4,6 +4,8 @@
 
 A serverless bot to trigger automatic orders on dYdX
 
+<img src="./doc/serverless-bot.drawio.png" width="300">
+
 ## Content
 
 * `doc` documentation

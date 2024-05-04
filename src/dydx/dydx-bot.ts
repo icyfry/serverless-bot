@@ -83,13 +83,13 @@ export class DYDXBot extends Bot {
         if(this.client === undefined) throw new Error("Client not initialized");
         if(this.subaccount === undefined) throw new Error("Subaccount not initialized");
 
-        // Check if position is open and on the right side
+        // Check if position is open
         const position: Position | undefined = await this.client.indexerClient.account.getSubaccountPerpetualPositions(this.subaccount.address, this.SUBACCOUNT_NUMBER).then((result) => {
             return result.positions.find((position: Position) => position.market === market && position.status === "OPEN");
         });
         if(position === undefined) throw new Error(`did not close : no position on ${market}`);
 
-        // Check hasToBeSide
+        // Check if position side is correct
         if(hasToBeSide !== undefined && position.side !== (hasToBeSide === OrderSide.BUY ? Bot.SIDE_LONG : Bot.SIDE_SHORT)) throw new Error(`did not close : position is not ${hasToBeSide}`);
 
         // Market close order
@@ -111,6 +111,7 @@ export class DYDXBot extends Bot {
         closingOrder.clientId = Date.now();
         closingOrder.reduceOnly = true;
 
+        // Send closing order
         const tx: TxResponse = await this.placeOrder(closingOrder);
 
         return {tx,position};

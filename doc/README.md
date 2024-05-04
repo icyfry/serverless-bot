@@ -7,7 +7,7 @@
     "source": "MOCK",
     "market":"BTC-USD" ,
     "price": "{{high}}" ,
-    "emitKey" : "TO_DEFINE",
+    "emitKey" : "MOCK",
     "dryrun" : false,
     "roundingFactor" : 100000000,
     "interval" : 3600,
@@ -16,9 +16,3 @@
     } 
 }
 ```
-
-* `SMART_MONEY_CONCEPTS`
-    * type `Bullish BOS` `Bearish BOS` 
-* `SUPER_TREND`
-    * action `BUY` `SELL`
-    * limit `{{plot_6}}` `{{high}}` `{{low}}`

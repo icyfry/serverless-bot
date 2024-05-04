@@ -14,6 +14,22 @@ export class Discord {
         if(prefix !== undefined) this.prefix = prefix;
     }
 
+    private getTxEmbedField(tx: any): any {
+        let hash: string;
+        if (tx?.hash instanceof Uint8Array) {
+            hash = Buffer.from(tx?.hash).toString('hex');
+        }
+        else {
+            hash = tx?.hash;
+        }
+        hash = hash.substring(0, 7) + "...";
+        return { name: `tx`, value: `${hash}`, inline: true };
+    }
+
+    /**
+     * Connect to discord
+     * @param token discord token
+     */
     public async login(token: string) {
     
         this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -30,28 +46,22 @@ export class Discord {
         await this.client.destroy();
     }
 
+    /**
+     * Send a basic text message
+     */
     public sendMessage(message: string): Promise<Message> {
         if(this.channel === undefined) throw new Error("Channel not initialized");
         if(!this.client?.isReady) throw new Error("Client not ready");
         return this.channel.send(this.prefix + message);
     }
 
+    /**
+     * Send an embed message
+     */
     public sendEmbedMessage(embed: EmbedBuilder): Promise<Message> {
         if(this.channel === undefined) throw new Error("Channel not initialized");
         if(!this.client?.isReady) throw new Error("Client not ready");
         return this.channel.send({ embeds: [embed] });
-    }
-
-    private getTxEmbedField(tx: any): any {
-        let hash: string;
-        if (tx?.hash instanceof Uint8Array) {
-            hash = Buffer.from(tx?.hash).toString('hex');
-        }
-        else {
-            hash = tx?.hash;
-        }
-        hash = hash.substring(0, 7) + "...";
-        return { name: `tx`, value: `${hash}`, inline: true };
     }
 
     public sendMessageClosePosition(market: string, position?: Position, tx?: any): Promise<Message> {
@@ -92,7 +102,7 @@ export class Discord {
             .setDescription(`${order.side} **${order.size}** ${order.market} at **${order.price}** $ (${order.price*order.size} $)`)
             .setTimestamp();
 
-            embed.addFields({ name: `ttl`, value: `${order.goodTillTime/60} min`, inline: true });
+            embed.addFields({ name: `interval`, value: `${order.goodTillTime/60} min`, inline: true });
 
         if (input !== undefined) embed.addFields({ name: `source`, value: `${input.source}`, inline: true });
 

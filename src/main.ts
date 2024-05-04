@@ -10,6 +10,9 @@ export interface CallbackResponseParams {
 }
 export type CallbackResponse = (response_error: Error|null, response_success: any) => any;
 
+/**
+ * Main handler for the lambda function
+ */
 exports.handler = function (event: APIGatewayProxyEvent, context: Context, callback: CallbackResponse) {
   
     console.log(`Event: ${JSON.stringify(event, null, 2)}`);
@@ -26,10 +29,8 @@ exports.handler = function (event: APIGatewayProxyEvent, context: Context, callb
             exit(callback, {response_error:new Error("not authorized"), response_success:undefined} );
         }
         else {
-
             // dYdX
             DydxHandler(input, context, callback);
-
         }
 
     } 
@@ -40,6 +41,11 @@ exports.handler = function (event: APIGatewayProxyEvent, context: Context, callb
     
 };
 
+/**
+ * Exit the lambda function
+ * @param callback callback function
+ * @param response content returned by the bot
+ */
 function exit(callback: CallbackResponse, response: CallbackResponseParams) {
     console.log(response);
     callback(response.response_error, response.response_success);
@@ -58,6 +64,7 @@ function DydxHandler(input: Input, context: Context, callback: CallbackResponse)
     }
     const bot: DYDXBot = new DYDXBot(network);
 
+    // Connect and process the event
     bot.connect().then((address: string): void => {
 
         console.log("Connected to dydx with " + address);
