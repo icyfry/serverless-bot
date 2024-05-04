@@ -18,6 +18,8 @@ describe("discord", () => {
   beforeEach(async () => {
     d = new Discord(DISCORD_PREFIX);
     await d.login(process.env.TEST_DISCORD_TOKEN as string);
+    d.address = process.env.TEST_ADDRESS_TESTNET as string;
+    d.subAccount = 0;
   }, TIMEOUT);
 
   afterEach(async () => {
@@ -47,20 +49,20 @@ describe("discord", () => {
 
   it("close position message to discord", async () => {
     d.sendMessageClosePosition("BTC-USD",{
-      realizedPnl: 10, 
-      unrealizedPnl: 100,
+      realizedPnl: 20, 
+      unrealizedPnl: 40,
       market: '',
       status: '',
       side: '',
       size: 0,
       maxSize: 0,
-      entryPrice: 0,
-      exitPrice: 0,
+      entryPrice: 500,
+      exitPrice: 1100,
       createdAt: new Date(),
       createdAtHeight: 0,
       closedAt: new Date(),
-      sumOpen: 0,
-      sumClose: 0,
+      sumOpen: 0.1,
+      sumClose: 0.1,
       netFunding: 0
     },{hash: "0x1234"})
   }, TIMEOUT);

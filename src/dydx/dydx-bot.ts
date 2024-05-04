@@ -11,13 +11,13 @@ export interface Position {
     maxSize: number,
     entryPrice: number,
     exitPrice: number,
-    realizedPnl: number,
-    unrealizedPnl: number,
+    realizedPnl: number, // in usd
+    unrealizedPnl: number, // in usd
     createdAt: Date,
     createdAtHeight: number,
     closedAt: Date,
-    sumOpen: number,
-    sumClose: number,
+    sumOpen: number, // in crypto
+    sumClose: number, // in crypto
     netFunding: number
 }
 
@@ -46,9 +46,6 @@ export class DYDXBot extends Bot {
         // Broker config
         const brokerConfig: BrokerConfig = await this.getBrokerConfig("BOT_DYDX");
 
-        // Connect to discord
-        await this.discord.login(brokerConfig.DISCORD_TOKEN);
-
         // DYDX Client
         this.client = await CompositeClient.connect(this.network);
 
@@ -64,6 +61,9 @@ export class DYDXBot extends Bot {
         this.wallet = await LocalWallet.fromMnemonic(walletMnemonic, BECH32_PREFIX);
         this.subaccount = new SubaccountClient(this.wallet, this.SUBACCOUNT_NUMBER);
         
+        // Connect to discord
+        await this.discord.login(brokerConfig.DISCORD_TOKEN,this.subaccount.address,this.SUBACCOUNT_NUMBER);
+
         return this.subaccount.address;
 
     }
@@ -87,10 +87,10 @@ export class DYDXBot extends Bot {
         const position: Position | undefined = await this.client.indexerClient.account.getSubaccountPerpetualPositions(this.subaccount.address, this.SUBACCOUNT_NUMBER).then((result) => {
             return result.positions.find((position: Position) => position.market === market && position.status === "OPEN");
         });
-        if(position === undefined) throw new Error(`did not close : no position on ${market}`);
+        if(position === undefined) throw new Error(`Trying to close a positon that does not exist on ${market}`);
 
         // Check if position side is correct
-        if(hasToBeSide !== undefined && position.side !== (hasToBeSide === OrderSide.BUY ? Bot.SIDE_LONG : Bot.SIDE_SHORT)) throw new Error(`did not close : position is not ${hasToBeSide}`);
+        if(hasToBeSide !== undefined && position.side !== (hasToBeSide === OrderSide.BUY ? Bot.SIDE_LONG : Bot.SIDE_SHORT)) throw new Error(`Trying to close a positon on ${market} but the position is already on the target side ${position.side}`);
 
         // Closing order
         const closingOrder: BotOrder = new BotOrder();

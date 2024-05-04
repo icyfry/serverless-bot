@@ -23,7 +23,8 @@ jest.mock('discord.js', () => {
           setColor: jest.fn().mockReturnThis(),
           setDescription: jest.fn().mockReturnThis(),
           setTimestamp: jest.fn().mockReturnThis(),
-          addFields: jest.fn().mockReturnThis()
+          addFields: jest.fn().mockReturnThis(),
+          setURL: jest.fn().mockReturnThis()
         };
       }),
       Events: { ClientReady : "ready" },
