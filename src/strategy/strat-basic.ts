@@ -17,7 +17,7 @@ export class BasicStrat extends Strat {
 
         const order = new BotOrder();
         order.market = input.market;
-        order.price = input.price;
+        order.price = Math.round(input.price*input.roundingFactorPrice)/input.roundingFactorPrice;
         order.type = OrderType.LIMIT;
         order.timeInForce = OrderTimeInForce.GTT;
         order.execution = OrderExecution.DEFAULT;
@@ -26,13 +26,13 @@ export class BasicStrat extends Strat {
 
         // Order size (in target currency)
         if(this.R === undefined) throw new Error("R not defined");
-        order.size = Math.round((this.R / input.price)*input.roundingFactor)/input.roundingFactor;
+        order.size = Math.round((this.R / input.price)*input.roundingFactorSize)/input.roundingFactorSize;
 
         switch(input.source) { 
             
             case InputSource.SuperTrend: {
                 const details = input.details as SuperTrendDetails;
-                order.price = details.limit;
+                order.price = Math.round(details.limit*input.roundingFactorPrice)/input.roundingFactorPrice;
                 if(details.action.toUpperCase() === "BUY") {
                     order.side = OrderSide.BUY;
                 }

@@ -59,7 +59,7 @@ export class DYDXBot extends Bot {
     /**
      * @see Bot
      */
-    async closePosition(market: string, hasToBeSide?: OrderSide, refPrice?: number): Promise<{tx: TxResponse,position: Position}> {
+    async closePosition(market: string, hasToBeSide?: OrderSide, refPrice?: number, refPriceRoundingFactor?: number): Promise<{tx: TxResponse,position: Position}> {
 
         if(this.client === undefined) throw new Error("Client not initialized");
         if(this.subaccount === undefined) throw new Error("Subaccount not initialized");
@@ -71,7 +71,7 @@ export class DYDXBot extends Bot {
         if(position === undefined) throw new Warning(`Trying to close a positon that does not exist on ${market}`);
 
         // Check if position side is correct
-        if(hasToBeSide !== undefined && position.side !== (hasToBeSide === OrderSide.BUY ? Bot.SIDE_LONG : Bot.SIDE_SHORT)) throw new Error(`Trying to close a positon on ${market} but the position is already on the target side ${position.side}`);
+        if(hasToBeSide !== undefined && position.side !== (hasToBeSide === OrderSide.BUY ? Bot.SIDE_LONG : Bot.SIDE_SHORT)) throw new Error(`Trying to close a positon on ${market} but the position is already on the target side (${position.side})`);
 
         // Closing order
         const closingOrder: BotOrder = new BotOrder();
@@ -90,7 +90,12 @@ export class DYDXBot extends Bot {
         // Use a limit order to close the position if a reference price is provided
         if(refPrice !== undefined) {
             closingOrder.type = OrderType.LIMIT;
-            closingOrder.price = (closingOrder.side === OrderSide.BUY ? refPrice*1.5 : refPrice*0.75);
+
+            // Limit closing price
+            let closingPrice = (closingOrder.side === OrderSide.BUY ? refPrice*1.5 : refPrice*0.75);
+            if(refPriceRoundingFactor !== undefined) closingPrice = Math.round(closingPrice*refPriceRoundingFactor)/refPriceRoundingFactor;
+
+            closingOrder.price = closingPrice;
             closingOrder.goodTillTime = 3600;
             closingOrder.timeInForce = OrderTimeInForce.GTT;
         }

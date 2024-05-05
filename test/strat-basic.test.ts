@@ -26,14 +26,14 @@ describe("basic strat", () => {
   });
   
   it("supertrend BUY", () => {
-    const order: BotOrder = strat.getStatelessOrderBasedOnInput({interval:60, roundingFactor:1000, dryrun:false, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.SuperTrend ,details:({action:"BUY",limit:50000} as SuperTrendDetails)});
+    const order: BotOrder = strat.getStatelessOrderBasedOnInput({interval:60, roundingFactorSize:10000000, roundingFactorPrice:10000000, dryrun:false, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.SuperTrend ,details:({action:"BUY",limit:50000} as SuperTrendDetails)});
     expect(order.size).toBe(0.1);
     expect(order.side).toBe(OrderSide.BUY);
     expect(order.price).toBe(50000);
   });
 
   it("supertrend SELL", () => {
-    const order: BotOrder = strat.getStatelessOrderBasedOnInput({interval:60, roundingFactor:1000, dryrun:false, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.SuperTrend ,details:({action:"SELL",limit:50000} as SuperTrendDetails)});
+    const order: BotOrder = strat.getStatelessOrderBasedOnInput({interval:60, roundingFactorSize:10000000, roundingFactorPrice:10000000, dryrun:false, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.SuperTrend ,details:({action:"SELL",limit:50000} as SuperTrendDetails)});
     expect(order.size).toBe(0.1);
     expect(order.side).toBe(OrderSide.SELL);
     expect(order.price).toBe(50000);
@@ -41,29 +41,57 @@ describe("basic strat", () => {
 
   it("supertrend error", () => {
     expect(() => {
-    const order: BotOrder = strat.getStatelessOrderBasedOnInput({interval:60, roundingFactor:1000, dryrun:false, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.SuperTrend ,details:({action:"ERR"} as SuperTrendDetails)});
+    const order: BotOrder = strat.getStatelessOrderBasedOnInput({interval:60, roundingFactorSize:10, roundingFactorPrice:100, dryrun:false, emitKey:"", market:"BTC-USD",price:10000,source: InputSource.SuperTrend ,details:({action:"ERR"} as SuperTrendDetails)});
     }).toThrow();
   });
 
   it("rounding", async () => {
-    const input : Input = {interval:60, roundingFactor:0, dryrun:true, emitKey:"", market:"BTC-USD",price:0,source: InputSource.Mock ,details:({action:"BUY",limit:0} as SuperTrendDetails)};
+
     let order: BotOrder;
 
-    // no rounding size = 0,0999594977723775
+    // Mock
+    const input : Input = {interval:60, roundingFactorSize:1, roundingFactorPrice:1, dryrun:true, emitKey:"", market:"BTC-USD",price:0,source: InputSource.Mock ,details:{}};
+
+    // no rounding size = 0.0999594977723775
     strat.R = 1234;
-    input.roundingFactor = 100000;
+    input.roundingFactorSize = 100000;
     input.price = 12345;
     
     order = strat.getStatelessOrderBasedOnInput(input);
     expect(order.size).toBe(0.09996);
 
-    // no rounding size = 16,02597402597403
+    // no rounding size = 16.02597402597403
     strat.R = 1234;
-    input.roundingFactor = 100000;
+    input.roundingFactorSize = 100000;
     input.price = 77;
     
     order = strat.getStatelessOrderBasedOnInput(input);
     expect(order.size).toBe(16.02597);
+
+    // no rounding price = 12.345678
+    strat.R = 1234;
+    input.roundingFactorPrice = 10000;
+    input.price = 12.345678;
+    
+    order = strat.getStatelessOrderBasedOnInput(input);
+    expect(order.price).toBe(12.3457);
+
+    // no rounding price = 77.7777
+    strat.R = 1234;
+    input.roundingFactorPrice = 1;
+    input.price = 77.7777;
+    
+    order = strat.getStatelessOrderBasedOnInput(input);
+    expect(order.price).toBe(78);
+
+    // SuperTrend
+    const inputSuperTrend : Input = {interval:60, roundingFactorSize:1, roundingFactorPrice:1, dryrun:true, emitKey:"", market:"BTC-USD",price:0,source: InputSource.SuperTrend ,details:({action:"BUY",limit:12345.6789} as SuperTrendDetails)};
+    
+    // no rounding limit = 12345.6789
+    inputSuperTrend.roundingFactorPrice = 100;
+    order = strat.getStatelessOrderBasedOnInput(inputSuperTrend);
+    expect(order.price).toBe(12345.68);
+
   });
 
   it("replay alerts", async () => {

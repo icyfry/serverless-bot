@@ -81,12 +81,11 @@ export class Input {
     public details: InputDetails = {};
     public emitKey = "nokey";
     public dryrun = false;
-    public roundingFactor = 100000000; // 8 decimals
+    public roundingFactorSize = 100000000; // 8 decimals
+    public roundingFactorPrice = 100000000; // 8 decimals
     public interval = 60; // 1 minute
     constructor(event: string) {
         Object.assign(this, JSON.parse(event));
-        // Rounding the prices
-        this.price = Math.round(this.price*100)/100;
     }
 }
 
@@ -109,8 +108,6 @@ export class SuperTrendDetails implements InputDetails {
     public plots?: string[] = [];
     constructor(details: string) {
         Object.assign(this, JSON.parse(details));
-        // Rounding the prices
-        this.limit = Math.round(this.limit*100)/100;
     }
 }
 
@@ -149,9 +146,10 @@ export abstract class Bot {
      * @param market the market to close
      * @param hasToBeSide the side the position has to be before closing (LONG or SHORT)
      * @param refPrice reference price used to close the position
+     * @param refPriceRoundingFactor rounding factor for prices related to the reference price
      * @returns transaction response and position closed
      */
-    public abstract closePosition(market: string, hasToBeSide?: OrderSide, refPrice?: number): Promise<{tx: TxResponse, position: Position}>;
+    public abstract closePosition(market: string, hasToBeSide?: OrderSide, refPrice?: number, refPriceRoundingFactor?: number): Promise<{tx: TxResponse, position: Position}>;
     
     /**
      * Connect to the broker
@@ -195,12 +193,12 @@ export abstract class Bot {
      * Process the lambda input event
      * @param input input of the lambda
      * @param strategy the strategy to apply
-     * @param _context the context
+     * @param context the context
      * @returns the response
      */
     public async process(input: Input, strategy: Strat, context?: Context): Promise<CallbackResponseParams> {
 
-        console.log(context?.awsRequestId);
+        if(context?.awsRequestId !== undefined) console.log(context?.awsRequestId);
 
         // Return of the process
         const response: CallbackResponseParams = {
@@ -224,7 +222,7 @@ export abstract class Bot {
 
             // Close previous position on this market
             try{
-            const closingTransaction: {tx: TxResponse, position: Position} = await this.closePosition(order.market, order.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY, order.price);
+            const closingTransaction: {tx: TxResponse, position: Position} = await this.closePosition(order.market, order.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY, order.price, input.roundingFactorPrice);
             await this.discord.sendMessageClosePosition(order.market, closingTransaction.position, closingTransaction.tx);
             } catch(error) {
                 if(error instanceof Warning) {
