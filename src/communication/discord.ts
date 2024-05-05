@@ -1,6 +1,6 @@
 import { Client, ColorResolvable, EmbedBuilder, GatewayIntentBits, Message, TextChannel } from "discord.js";
-import { BotOrder, Position, Input, Output, Warning } from "../bot";
-import { OrderSide } from "@dydxprotocol/v4-client-js";
+import { BotOrder, Position, Input, Output, Warning, Bot } from "../bot";
+import { OrderSide, OrderType } from "@dydxprotocol/v4-client-js";
 import { Strat } from "../strategy/strat";
 import { BroadcastTxAsyncResponse, BroadcastTxSyncResponse } from "@cosmjs/tendermint-rpc";
 import { IndexedTx } from "@cosmjs/stargate";
@@ -15,6 +15,7 @@ export class Discord {
 
     public client?: Client;
     public channel?: TextChannel;
+
     public prefix = ""; // global prefix for all messages
 
     // Bot reference
@@ -41,6 +42,9 @@ export class Discord {
         return { name: `tx`, value: `${hash}`, inline: true };
     }
 
+    /**
+     * Get the Chaoslabs url of the account
+     */
     private getChaoslabsUrl(address: string,subAccount: number): string {
         return `https://community.chaoslabs.xyz/dydx-v4/risk/accounts/${address}/subAccount/${subAccount}/overview`;
     }
@@ -55,11 +59,10 @@ export class Discord {
         this.address = address;
         this.subAccount = subAccount;
 
-        this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
         // Login to discord
+        this.client = new Client({ intents: [GatewayIntentBits.Guilds] });
         await this.client.login(token);
-        this.channel = (await this.client.channels.fetch(process.env.DISCORD_CHANNEL_ID as string)) as TextChannel;
+        this.channel = (await this.client.channels.fetch(process.env.BOT_DISCORD_CHANNEL_ID as string)) as TextChannel;
 
     }
 
@@ -82,6 +85,21 @@ export class Discord {
     }
 
     /**
+     * Send a debug message
+     */
+    public sendDebug(message: string): Promise<Message> {
+        return this.sendMessage(`⚙️ ${message}`);
+    }
+
+    /**
+     * Send a error message
+     */
+    public sendError(message: Error): Promise<Message> {
+        if(message instanceof Warning) return this.sendMessage("⚠️ "+message);
+        else return this.sendMessage("❌ "+message);
+    }
+
+    /**
      * Send an embed message
      */
     public sendEmbedMessage(embed: EmbedBuilder): Promise<Message> {
@@ -90,36 +108,52 @@ export class Discord {
         return this.channel.send({ embeds: [embed] });
     }
     
+    /**
+     * Send a message when a position is closed
+     */
     public sendMessageClosePosition(market: string, position: Position, tx?: TxResponse): Promise<Message> {
 
+        let color: ColorResolvable = 0x000000;
+        if (position.side === Bot.SIDE_LONG) {
+            color = 0x00FF7F;
+        } else if (position.side === Bot.SIDE_SHORT) {
+            color = 0xFF0000;
+        }
+        
         const embed = new EmbedBuilder()
         .setTitle(`${market}`)
-        .setColor(0x404040)
+        .setColor(color)
         .setTimestamp();
-
+        
         if(this.address !== undefined && this.subAccount !== undefined) {
             embed.setURL(this.getChaoslabsUrl(this.address,this.subAccount))
-            //.setAuthor({ name: `${this.address}`})
         }
 
-        const pnl: number = +position.realizedPnl + +position.unrealizedPnl;
-        embed.addFields({ name: `pnl`, value: `${pnl}`, inline: true });
+        const pnl: number = Math.round((+position.realizedPnl + +position.unrealizedPnl)*100)/100;
+        embed.addFields({ name: `in/out`, value: `${position.entryPrice}/${position.exitPrice}`, inline: true });
         embed.addFields({ name: `size`, value: `${position.size}`, inline: true });
 
-        // Performance at close
+        const duration = position.createdAt.valueOf() - position.closedAt.valueOf();
+        embed.addFields({ name: `duration`, value: `${duration/1440000} hours`, inline: true });
+
+        // Performance
         const perf = Math.round((pnl/(position.sumOpen * position.entryPrice))*10000)/10000;
         let perfIcon: string;
-        if(perf > -0.05 && perf < 0.02) {
-            perfIcon = "😑";
+        if(perf > -0.01 && perf < 0.01) {
+            perfIcon = "💤";
         }else if(perf <= -0.05) {
             perfIcon = "😡";
-        }else if(perf >= 0.1) {
+        }else if(perf <= -0.01) {
+            perfIcon = "🫣";
+        }else if(perf >= 0.05) {
             perfIcon = "🚀";
-        }else {
+        }else if(perf >= 0.01) {
             perfIcon = "🙂";
+        }else {
+            perfIcon = "🤔";
         }
 
-        embed.setDescription(`${perfIcon} Close position at **${perf*100}**%`);
+        embed.setDescription(`${perfIcon} Close ${position.side} position with profit of **${perf*100}**% (**${pnl}**$)`);
 
         if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
 
@@ -127,32 +161,43 @@ export class Discord {
 
     }
 
+    /**
+     * Send a message when an order is placed
+     */
     public sendMessageOrder(order: BotOrder, input?: Input, strategy?: Strat, tx?: TxResponse): Promise<Message> {
         
         // Color of the embed
         let color: ColorResolvable;
-        if (order.side == OrderSide.BUY) {
-            color = 0x00FF7F;
-        } else if (order.side == OrderSide.SELL) {
-            color = 0xFF0000;
-        } else {
-            color = 0x000000;
-        }
+        let description: string;
 
         // size in USD
         const usdSize = Math.round((order.price*order.size)*100)/100;
 
+        // Description and color
+        if(order.type === OrderType.STOP_MARKET) {
+            description = `Stop ${order.side} at ${order.triggerPrice}$`;
+            color = 0xCCCCCC;
+        }
+        else {
+            description = `${order.side} **${order.size}** ${order.market} at ${order.type} **${order.price}**$ (${usdSize}$)`;
+            if (order.side == OrderSide.BUY) {
+                color = 0x00FF7F;
+            } else if (order.side == OrderSide.SELL) {
+                color = 0xFF0000;
+            } else {
+                color = 0x000000;
+            }
+        }
+
         const embed = new EmbedBuilder()
         .setTitle(`${order.market}`)
         .setColor(color)
-        .setDescription(`${order.side} **${order.size}** ${order.market} at limit **${order.price}**$ (${usdSize}$)\nCurrent price is ${input?.price}$`)
-        .setTimestamp();
-
-        embed.addFields({ name: `interval`, value: `${order.goodTillTime/60} min`, inline: true });
+        .setDescription(`${description}\nCurrent price is ${input?.price}$`)
+        .setTimestamp()
+        .addFields({ name: `ttl`, value: `${order.goodTillTime/60} min`, inline: true });
 
         if(this.address !== undefined && this.subAccount !== undefined) {
             embed.setURL(this.getChaoslabsUrl(this.address,this.subAccount))
-            //.setAuthor({ name: `${this.address}`})
         }
 
         if (input !== undefined) embed.addFields({ name: `source`, value: `${input.source}`, inline: true });
@@ -163,14 +208,12 @@ export class Discord {
         
     }
 
+    /**
+     * Send a message describing an output
+     */
     public sendMessageOutput(output: Output): Promise<Message> {
         const message = output.toString();
         return this.sendMessage(message);
-    }
-
-    public sendError(message: Error): Promise<Message> {
-        if(message instanceof Warning) return this.sendMessage("⚠️ "+message);
-        else return this.sendMessage("❌ "+message);
     }
 
 }

@@ -13,9 +13,9 @@ dotenv.config();
 function getBrokerConfig(): Promise<BrokerConfig> {
   return new Promise((resolve, reject) => {
       const config: BrokerConfig = { 
-        TESTNET_MNEMONIC: process.env.TEST_MNEUMONIC_TESTNET as string, 
+        TESTNET_MNEMONIC: process.env.BOT_TESTNET_MNEUMONIC as string, 
         MAINNET_MNEMONIC: "",
-        DISCORD_TOKEN: process.env.TEST_DISCORD_TOKEN as string
+        DISCORD_TOKEN: process.env.BOT_TEST_DISCORD_TOKEN as string
       };
       resolve(config);
   });
@@ -39,12 +39,12 @@ describe("dYdX", () => {
     await bot.disconnect();
   }, TIMEOUT);
 
- xit("connect client", async () => {
+  xit("connect client", async () => {
     const address: string = bot.subaccount?.address as string;
     expect(bot.client).toBeDefined();
     expect(bot.subaccount).toBeDefined();
     expect(bot.wallet).toBeDefined();
-    expect(address).toBe(process.env.TEST_ADDRESS_TESTNET)
+    expect(address).toBe(process.env.BOT_TESTNET_ADDRESS)
   }, TIMEOUT);
 
   xit("testnet place order not executed", async () => {
@@ -72,18 +72,8 @@ describe("dYdX", () => {
     order.side = OrderSide.BUY;
     await bot.placeOrder(order);
 
-    // Try to cLose (error on side)
     try {
-      await bot.closePosition(market,OrderSide.SELL);
-    }
-    catch(e: unknown){
-      // should return error
-      expect((e as Error).message).toBe("Trying to close a positon on DOGE-USD but the position is already on the target side (LONG)");
-    }
-
-    // Try to cLose (error on exist)
-    try {
-      await bot.closePosition('ETH-USD');
+      await bot.closePosition('ETH-USD', 1, 100000);
     }
     catch(e: unknown){
       // should return error
@@ -92,7 +82,7 @@ describe("dYdX", () => {
 
     // CLose Position after 5s (wait for tx validation)
     await setTimeout(async () => {
-      await bot.closePosition(market, OrderSide.BUY , 1, 100000);
+      await bot.closePosition(market, 1, 100000);
     }, 5000);
 
   }, TIMEOUT);

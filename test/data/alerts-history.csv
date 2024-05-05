@@ -1,881 +1,881 @@
 ID de l'alerte,Ticker,Nom,Description,Heure
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""emitKey"" : ""MOCK"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.898"" ,
     ""interval"": ""300"",
     ""roundingFactor"" : 1,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.898"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.898"",
         ""plots"" : [ ""6.808770672436125"",""6.808770672436125"",""null"",""null"",""null"",""6.884"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null""]
     } 
 }",2024-05-04T13:04:21Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""emitKey"" : ""MOCK"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.876"" ,
     ""interval"": ""300"",
     ""roundingFactor"" : 1,
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.8925"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.8925"",
         ""plots"" : [ ""null"",""null"",""6.981319478829949"",""6.981319478829949"",""6.981319478829949"",""6.8925"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null""]
     } 
 }",2024-05-04T11:33:42Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""emitKey"" : ""MOCK"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.899"" ,
     ""interval"": ""300"",
     ""roundingFactor"" : 1,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.899"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.899"",
         ""plots"" : [ ""6.803858420377827"",""6.803858420377827"",""null"",""null"",""null"",""6.882"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null""]
     } 
 }",2024-05-04T10:40:07Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""emitKey"" : ""MOCK"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.862"" ,
     ""interval"": ""300"",
     ""roundingFactor"" : 1,
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.86675"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.86675"",
         ""plots"" : [ ""null"",""null"",""6.9244197472655635"",""6.9244197472655635"",""6.9244197472655635"",""6.86675"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null"",""null""]
     } 
 }",2024-05-04T09:46:34Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.868"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.853"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.853"",
         ""plots"" : [""6.789006238081939"",""6.789006238081939"",""6.853""]
     } 
 }",2024-05-04T04:47:23Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.839"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.849"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.849"",
         ""plots"" : [""6.9400381265782345"",""6.9400381265782345"",""6.9400381265782345"",""6.849""]
     } 
 }",2024-05-04T02:02:35Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.839"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.853"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.853"",
         ""plots"" : [""6.923833282158793"",""6.923833282158793"",""6.923833282158793"",""6.853""]
     } 
 }",2024-05-04T00:26:39Z
 1336242770,"BINANCE:SOLUSDT, 15m",SOL BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""SOL-USD"" ,
     ""price"": ""139.24"" ,
 	""roundingFactor"" : 1000,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""139.24"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""139.24"",
         ""plots"" : [""135.06317486623223"",""135.06317486623223"",""138.19250000000002""]
     } 
 }",2024-05-03T12:31:36Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.2"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.2"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.2"",
         ""plots"" : [""6.128646470201177"",""6.128646470201177"",""6.1875""]
     } 
 }",2024-05-03T12:30:09Z
 1333570460,"BINANCE:ETHUSD, 15m",ETH BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2996.21"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""2996.21"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""2996.21"",
         ""plots"" : [""2954.7279581496387"",""2954.7279581496387"",""2986.6775""]
     } 
 }",2024-05-03T12:30:39Z
 1330341724,"INDEX:BTCUSD, 15m",BTC BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""59491.15"" ,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""59491.15"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""59491.15"",
         ""plots"" : [""58699.30839482297"",""58699.30839482297"",""59319.9575""]
     } 
 }",2024-05-03T12:30:19Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.207"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.2175"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.2175"",
         ""plots"" : [""6.267221306877751"",""6.267221306877751"",""6.267221306877751"",""6.2175""]
     } 
 }",2024-05-03T10:36:52Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.245"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.245"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.245"",
         ""plots"" : [""6.197441851510162"",""6.197441851510162"",""6.243""]
     } 
 }",2024-05-03T09:47:49Z
 1330340569,"INDEX:BTCUSD, 15m",BTC BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""59262.42"" ,
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""59338.78"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""59338.78"",
         ""plots"" : [""59751.10084919286"",""59751.10084919286"",""59751.10084919286"",""59338.78""]
     } 
 }",2024-05-03T07:39:31Z
 1336245085,"BINANCE:SOLUSDT, 15m",SOL BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""SOL-USD"" ,
     ""price"": ""137.9"" ,
 	""roundingFactor"" : 1000,
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""138.20999999999998"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""138.20999999999998"",
         ""plots"" : [""null"",""null"",""138.20999999999998""]
     } 
 }",2024-05-03T07:38:29Z
 1333573257,"BINANCE:ETHUSD, 15m",ETH BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2989.63"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""2990.41"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""2990.41"",
         ""plots"" : [""3013.686402519051"",""3013.686402519051"",""3013.686402519051"",""2990.41""]
     } 
 }",2024-05-03T06:49:04Z
 1333573257,"BINANCE:ETHUSD, 15m",ETH BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2988.49"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""2989.96"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""2989.96"",
         ""plots"" : [""3013.692002798946"",""3013.692002798946"",""3013.692002798946"",""2989.96""]
     } 
 }",2024-05-03T06:31:42Z
 1333573257,"BINANCE:ETHUSD, 15m",ETH BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2989.04"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""2991.6050000000005"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""2991.6050000000005"",
         ""plots"" : [""3015.94400310994"",""3015.94400310994"",""3015.94400310994"",""2991.6050000000005""]
     } 
 }",2024-05-03T06:17:25Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.295"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.2995"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.2995"",
         ""plots"" : [""6.379501792805186"",""6.379501792805186"",""6.379501792805186"",""6.2995""]
     } 
 }",2024-05-03T05:05:16Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.116"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.116"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.116"",
         ""plots"" : [""6.041389116250025"",""6.041389116250025"",""6.108499999999999""]
     } 
 }",2024-05-03T01:07:00Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.064"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.0875"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.0875"",
         ""plots"" : [""6.142328763122106"",""6.142328763122106"",""6.142328763122106"",""6.0875""]
     } 
 }",2024-05-03T00:19:23Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.071"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.0825"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.0825"",
         ""plots"" : [""6.1417287631221065"",""6.1417287631221065"",""6.1417287631221065"",""6.0825""]
     } 
 }",2024-05-02T23:57:21Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.094"" ,
 ""roundingFactor"" : 100,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.094"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.094"",
         ""plots"" : [""6.001408780403783"",""6.001408780403783"",""6.07325""]
     } 
 }",2024-05-02T21:37:19Z
 1336245085,"BINANCE:SOLUSDT, 15m",SOL BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""SOL-USD"" ,
     ""price"": ""135.89"" ,
 	""roundingFactor"" : 1000,
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""137.96"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""137.96"",
         ""plots"" : [""null"",""null"",""136.8675""]
     } 
 }",2024-05-02T20:39:32Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.184"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.184"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.184"",
         ""plots"" : [""6.107118290614639"",""6.107118290614639"",""6.1805""]
     } 
 }",2024-05-02T18:10:20Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.098"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.1045"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.1045"",
         ""plots"" : [""6.18668125921332"",""6.18668125921332"",""6.18668125921332"",""6.1045""]
     } 
 }",2024-05-02T16:55:55Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.095"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.109999999999999"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.109999999999999"",
         ""plots"" : [""6.195569455818914"",""6.195569455818914"",""6.195569455818914"",""6.109999999999999""]
     } 
 }",2024-05-02T16:50:39Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.105"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.105"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.105"",
         ""plots"" : [""5.995823241508724"",""5.995823241508724"",""6.09825""]
     } 
 }",2024-05-02T14:38:21Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.105"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.105"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.105"",
         ""plots"" : [""5.985503520121702"",""5.985503520121702"",""6.08225""]
     } 
 }",2024-05-02T14:33:27Z
 1333573257,"BINANCE:ETHUSD, 15m",ETH BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2955.4"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""2963.2675"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""2963.2675"",
         ""plots"" : [""3015.5060630676194"",""3015.5060630676194"",""3015.5060630676194"",""2963.2675""]
     } 
 }",2024-05-02T14:10:22Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.07"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.08425"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.08425"",
         ""plots"" : [""6.19155813119692"",""6.19155813119692"",""6.19155813119692"",""6.08425""]
     } 
 }",2024-05-02T13:09:16Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.069"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.0714999999999995"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.0714999999999995"",
         ""plots"" : [""6.1749421864053895"",""6.1749421864053895"",""6.1749421864053895"",""6.0714999999999995""]
     } 
 }",2024-05-02T12:30:06Z
 1330341724,"INDEX:BTCUSD, 15m",BTC BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""57939.29"" ,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""57939.29"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""57939.29"",
         ""plots"" : [""57398.43952346819"",""57398.43952346819"",""57879.902500000004""]
     } 
 }",2024-05-02T11:01:31Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.965"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.965"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.965"",
         ""plots"" : [""5.868768545768285"",""5.868768545768285"",""5.946750000000001""]
     } 
 }",2024-05-02T09:01:16Z
 1330341724,"INDEX:BTCUSD, 15m",BTC BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""57937.6"" ,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""57937.6"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""57937.6"",
         ""plots"" : [""57349.89762326992"",""57349.89762326992"",""57885.83""]
     } 
 }",2024-05-02T08:49:57Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.954"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.954"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.954"",
         ""plots"" : [""5.871367652793603"",""5.871367652793603"",""5.94925""]
     } 
 }",2024-05-02T08:30:51Z
 1330341724,"INDEX:BTCUSD, 15m",BTC BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""57942.86"" ,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""57942.86"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""57942.86"",
         ""plots"" : [""57408.38747029991"",""57408.38747029991"",""57926.947499999995""]
     } 
 }",2024-05-02T08:30:49Z
 1333570460,"BINANCE:ETHUSD, 15m",ETH BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2941.8"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""2941.8"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""2941.8"",
         ""plots"" : [""2901.200467450597"",""2901.200467450597"",""2935.2875000000004""]
     } 
 }",2024-05-02T08:29:00Z
 1330341724,"INDEX:BTCUSD, 15m",BTC BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""57939"" ,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""57939"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""57939"",
         ""plots"" : [""57250.15607811102"",""57250.15607811102"",""57839.925""]
     } 
 }",2024-05-02T08:28:49Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.952"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.952"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.952"",
         ""plots"" : [""5.853441836437337"",""5.853441836437337"",""5.933""]
     } 
 }",2024-05-02T08:28:39Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.916"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""5.931500000000001"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""5.931500000000001"",
         ""plots"" : [""5.9944851969530095"",""5.9944851969530095"",""5.9944851969530095"",""5.931500000000001""]
     } 
 }",2024-05-02T07:46:05Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.978"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.978"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.978"",
         ""plots"" : [""5.91667933598773"",""5.91667933598773"",""5.9697499999999994""]
     } 
 }",2024-05-02T07:17:22Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.978"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.978"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.978"",
         ""plots"" : [""5.91447933598773"",""5.91447933598773"",""5.973000000000001""]
     } 
 }",2024-05-02T07:10:22Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.975"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.975"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.975"",
         ""plots"" : [""5.91103610962156"",""5.91103610962156"",""5.95975""]
     } 
 }",2024-05-02T07:09:17Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.978"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.978"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.978"",
         ""plots"" : [""5.914436109621559"",""5.914436109621559"",""5.978""]
     } 
 }",2024-05-02T06:05:21Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.937"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""5.94"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""5.94"",
         ""plots"" : [""5.988897284501444"",""5.988897284501444"",""5.988897284501444"",""5.94""]
     } 
 }",2024-05-02T05:21:23Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.936"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""5.9395"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""5.9395"",
         ""plots"" : [""5.988897284501444"",""5.988897284501444"",""5.988897284501444"",""5.9395""]
     } 
 }",2024-05-02T05:15:04Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.937"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""5.938000000000001"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""5.938000000000001"",
         ""plots"" : [""5.988897284501444"",""5.988897284501444"",""5.988897284501444"",""5.938000000000001""]
     } 
 }",2024-05-02T05:10:03Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.934"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""5.936750000000001"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""5.936750000000001"",
         ""plots"" : [""5.994897284501444"",""5.994897284501444"",""5.994897284501444"",""5.936750000000001""]
     } 
 }",2024-05-02T05:05:36Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.997"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.997"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.997"",
         ""plots"" : [""5.90264581994317"",""5.90264581994317"",""5.98925""]
     } 
 }",2024-05-02T03:27:50Z
 1333573257,"BINANCE:ETHUSD, 15m",ETH BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2929.11"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""2935.545"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""2935.545"",
         ""plots"" : [""2977.2607055601297"",""2977.2607055601297"",""2977.2607055601297"",""2935.545""]
     } 
 }",2024-05-02T01:34:20Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.085"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.1000000000000005"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.1000000000000005"",
         ""plots"" : [""6.199525853122404"",""6.199525853122404"",""6.199525853122404"",""6.1000000000000005""]
     } 
 }",2024-05-02T00:11:53Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.14"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.14"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.14"",
         ""plots"" : [""6.054394913949637"",""6.054394913949637"",""6.1235""]
     } 
 }",2024-05-01T23:34:16Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.141"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.141"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.141"",
         ""plots"" : [""6.052194913949636"",""6.052194913949636"",""6.13425""]
     } 
 }",2024-05-01T22:47:02Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.139"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.139"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.139"",
         ""plots"" : [""6.044449904388485"",""6.044449904388485"",""6.12825""]
     } 
 }",2024-05-01T22:41:11Z
 1333573257,"BINANCE:ETHUSD, 15m",ETH BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2915.54"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""2923.4449999999997"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""2923.4449999999997"",
         ""plots"" : [""3001.945685337021"",""3001.945685337021"",""3001.945685337021"",""2923.4449999999997""]
     } 
 }",2024-05-01T20:16:24Z
 1330340569,"INDEX:BTCUSD, 15m",BTC BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""57386.48"" ,
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""57476.065"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""57476.065"",
         ""plots"" : [""59041.097714597134"",""59041.097714597134"",""59041.097714597134"",""57476.065""]
     } 
 }",2024-05-01T19:48:16Z
 1333573257,"BINANCE:ETHUSD, 15m",ETH BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2915.57"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""2935.275"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""2935.275"",
         ""plots"" : [""3019.8417082812366"",""3019.8417082812366"",""3019.8417082812366"",""2935.275""]
     } 
 }",2024-05-01T19:34:48Z
 1330340569,"INDEX:BTCUSD, 15m",BTC BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""57393.18"" ,
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""57713.939999999995"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""57713.939999999995"",
         ""plots"" : [""59041.097714597134"",""59041.097714597134"",""59041.097714597134"",""57713.939999999995""]
     } 
 }",2024-05-01T19:34:09Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.16"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.171"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.171"",
         ""plots"" : [""6.371020320602756"",""6.371020320602756"",""6.371020320602756"",""6.171""]
     } 
 }",2024-05-01T19:31:13Z
 1330341724,"INDEX:BTCUSD, 15m",BTC BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""57845.29"" ,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""57845.29"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""57845.29"",
         ""plots"" : [""56461.78565044764"",""56461.78565044764"",""57609.625""]
     } 
 }",2024-05-01T18:03:36Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.999"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.999"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.999"",
         ""plots"" : [""5.882391510801332"",""5.882391510801332"",""5.979""]
     } 
 }",2024-05-01T17:46:29Z
 1333243583,"MOCK:NEARUSD, 5m",NEAR BOT ST BUY 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""5.99"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""5.99"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""5.99"",
         ""plots"" : [""5.880391510801332"",""5.880391510801332"",""5.9825""]
     } 
 }",2024-05-01T17:36:12Z
 1333573257,"BINANCE:ETHUSD, 15m",ETH BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2870.22"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""2872.6549999999997"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""2872.6549999999997"",
         ""plots"" : [""2923.120163661487"",""2923.120163661487"",""2923.120163661487"",""2872.6549999999997""]
     } 
 }",2024-05-01T17:15:12Z
 1333573257,"BINANCE:ETHUSD, 15m",ETH BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""ETH-USD"" ,
     ""price"": ""2870.15"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""2875.5375"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""2875.5375"",
         ""plots"" : [""2926.9537722286836"",""2926.9537722286836"",""2926.9537722286836"",""2875.5375""]
     } 
 }",2024-05-01T15:17:43Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.011"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.023499999999999"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.023499999999999"",
         ""plots"" : [""6.114627130317642"",""6.114627130317642"",""6.114627130317642"",""6.023499999999999""]
     } 
 }",2024-05-01T13:54:47Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.01"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.01"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.01"",
         ""plots"" : [""6.104727130317642"",""6.104727130317642"",""6.104727130317642"",""6.01""]
     } 
 }",2024-05-01T13:40:01Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.008"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.023499999999999"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.023499999999999"",
         ""plots"" : [""6.123835963355114"",""6.123835963355114"",""6.123835963355114"",""6.023499999999999""]
     } 
 }",2024-05-01T13:38:09Z
 1333245388,"MOCK:NEARUSD, 5m",NEAR BOT ST SELL 5MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.01"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.025499999999999"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.025499999999999"",
         ""plots"" : [""6.1246359633551135"",""6.1246359633551135"",""6.1246359633551135"",""6.025499999999999""]
     } 
 }",2024-05-01T13:33:54Z
 1330341724,"INDEX:BTCUSD, 15m",BTC BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""58245.3"" ,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""58245.3"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""58245.3"",
         ""plots"" : [""57124.88495913242"",""57124.88495913242"",""58130.7625""]
     } 
 }",2024-05-01T12:36:28Z
 1332241800,"MOCK:NEARUSD, 15m",NEAR BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.068"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.068"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.068"",
         ""plots"" : [""5.7122071908458025"",""5.7122071908458025"",""5.984""]
     } 
 }",2024-05-01T09:09:07Z
 1332241800,"MOCK:NEARUSD, 15m",NEAR BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.019"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.019"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.019"",
         ""plots"" : [""5.70143120980191"",""5.70143120980191"",""5.962999999999999""]
     } 
 }",2024-05-01T09:05:11Z
 1332244999,"MOCK:NEARUSD, 15m",NEAR BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.064"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.06925"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.06925"",
         ""plots"" : [""6.2616039797675835"",""6.2616039797675835"",""6.2616039797675835"",""6.06925""]
     } 
 }",2024-05-01T00:30:36Z
 1332244999,"MOCK:NEARUSD, 15m",NEAR BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.064"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.10475"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.10475"",
         ""plots"" : [""6.300965606682899"",""6.300965606682899"",""6.300965606682899"",""6.10475""]
     } 
 }",2024-05-01T00:28:43Z
 1330341724,"INDEX:BTCUSD, 15m",BTC BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""60852.86"" ,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""60852.86"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""60852.86"",
         ""plots"" : [""59923.088230885776"",""59923.088230885776"",""60759.74250000001""]
     } 
 }",2024-04-30T23:48:00Z
 1330341724,"INDEX:BTCUSD, 15m",BTC BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
 ""emitKey"" : ""MOCK"",
     ""market"":""BTC-USD"" ,
     ""price"": ""60879.99"" ,
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""60879.99"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""60879.99"",
         ""plots"" : [""59784.13876589913"",""59784.13876589913"",""60787.6225""]
     } 
 }",2024-04-30T22:34:45Z
 1332244999,"MOCK:NEARUSD, 15m",NEAR BOT ST SELL 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.051"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""SELL"",
-        ""limit"":""6.093999999999999"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""SELL"",
+        ""entry"":""6.093999999999999"",
         ""plots"" : [""null"",""null"",""null"",""6.093999999999999""]
     } 
 }",2024-04-30T20:03:35Z
 1332241800,"MOCK:NEARUSD, 15m",NEAR BOT ST BUY 15MIN,"{
-    ""source"": ""SUPER_TREND"",
+    ""source"": ""TREND"",
     ""market"":""NEAR-USD"" ,
     ""price"": ""6.137"" ,
     ""emitKey"" : ""MOCK"",
-    ""details"" : {
-        ""action"":""BUY"",
-        ""limit"":""6.093999999999999"",
+    ""details"" : { ""cancel"":""100000"",
+        ""trend"":""BUY"",
+        ""entry"":""6.093999999999999"",
         ""plots"" : [""5.901860572163317"",""5.901860572163317"",""6.093999999999999""]
     } 
 }",2024-04-30T20:03:35Z

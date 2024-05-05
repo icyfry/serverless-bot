@@ -1,10 +1,17 @@
-import { OrderSide } from "@dydxprotocol/v4-client-js";
-import { Bot, BotOrder, Input } from "../../src/bot";
+import { OrderSide, OrderType } from "@dydxprotocol/v4-client-js";
+import { Bot, BotOrder, Input, Position } from "../../src/bot";
 import { Strat } from "../../src/strategy/strat";
 import { Context } from "aws-lambda";
 import { CallbackResponseParams } from "../../src/main";
 
+/**
+ * Mock Bot for testing strategies
+ */
 export class MockBot extends Bot {
+
+    // For stats
+    private statsPreviousBalanceLastClose: number;
+    private statsHeatMap: string = "";
 
     public balance: number;
     public openPositonsLongs: Map<string,number> = new Map();
@@ -13,7 +20,16 @@ export class MockBot extends Bot {
 
     constructor(initialBalance: number) {
         super();
+        this.statsPreviousBalanceLastClose = initialBalance;
         this.balance = initialBalance;
+    }
+
+    /**
+     * 
+     * @returns Return visual statistics
+     */
+    public getHeatMap() : string {
+        return this.statsHeatMap;
     }
 
     /**
@@ -40,6 +56,14 @@ export class MockBot extends Bot {
     }
 
     /**
+     * Validate a order at a specified price
+     */
+    private async placeOrderOverridePrice(order: BotOrder, price: number): Promise<any> {
+        order.price = price;
+        return this.placeOrder(order);
+    }
+
+    /**
      * @see Bot
      */
     public closePosition(market: string): Promise<{tx: any, position: any}> {
@@ -57,6 +81,15 @@ export class MockBot extends Bot {
             // Close order
             this.openPositonsShorts.delete(market);
         }
+
+        // Stats
+        if(this.getFullBalance() < this.statsPreviousBalanceLastClose) {
+            this.statsHeatMap += "🟥";
+        }else{
+            this.statsHeatMap += "🟩";
+        }
+        this.statsPreviousBalanceLastClose = this.getFullBalance();
+        
         return Promise.resolve({tx: {},  position: {}});
     }
 
@@ -70,31 +103,31 @@ export class MockBot extends Bot {
     /**
      * @see Bot
      */
-    async disconnect(): Promise<void> {
-        // N/A
-    }
-    
-    /**
-     * @see Bot
-     */
     public async process(input: Input, strategy: Strat, context?: Context): Promise<CallbackResponseParams> {
 
-        const order: BotOrder = strategy.getStatelessOrderBasedOnInput(input);
+        const orders: BotOrder[] = strategy.getStatelessOrdersBasedOnInput(input);
 
-        // Last known price
-        this.prices.set(order.market, order.price);
+            if(orders.length == 0) throw new Error("No orders to process");
+       
+            // Last known price
+            this.prices.set(input.market, input.price);
 
-        // Position already in place , ignore input
-        if((order.side == OrderSide.BUY && this.openPositonsLongs.has(order.market)) || 
-        (order.side == OrderSide.SELL && this.openPositonsShorts.has(order.market))) {
-            return Promise.resolve({response_error:undefined, response_success:undefined});
-        }
+            // Close previous position
+            this.closePosition(input.market);
 
-        // Close previous position
-        this.closePosition(order.market);
+            // Open positions for orders
+            for (const order of orders) {
+                if(order.type === OrderType.LIMIT || order.type === OrderType.MARKET) {
+                    let price = input.price;
+                    // Take optimistic price for limit orders
+                    if((order.type === OrderType.LIMIT && order.side === OrderSide.BUY && order.price < input.price)
+                    || (order.type === OrderType.LIMIT && order.side === OrderSide.SELL && order.price > input.price)) {
+                        price = order.price;
 
-        // Open new position
-        this.placeOrder(order);
+                    }
+                    this.placeOrderOverridePrice(order, price);
+                }
+            }
 
         return Promise.resolve({response_error:undefined, response_success:undefined});
 
@@ -113,14 +146,27 @@ export class MockBot extends Bot {
             this.openPositonsShorts.set(order.market, (this.openPositonsShorts.get(order.market) ?? 0) + order.size);
             this.balance += value;
         }
+    }
 
+    /**
+     * @see Bot
+     */
+    async disconnect(): Promise<void> {
+        throw new Error("Method not implemented.");
     }
 
     /**
      * @see Bot
      */
     async cancelOrdersForMarket(market: string, clientId: number): Promise<any> {
-        // N/A
+        throw new Error("Method not implemented.");
+    }
+
+    /**
+     * @see Bot
+     */
+    public createClosePositionOrder(market: string, refPrice: number, refPriceRoundingFactor: number): Promise<{ order: BotOrder; position: Position; }> {
+        throw new Error("Method not implemented.");
     }
 
 }

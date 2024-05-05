@@ -23,7 +23,8 @@ A serverless bot to trigger automatic orders on dYdX
 
 Create a `.env` file
 ```
-NETWORK=testnet
+BOT_NETWORK=testnet
+BOT_DEBUG=false
 ```
 
 Install dependencies, run unit tests and build

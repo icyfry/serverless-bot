@@ -1,10 +1,14 @@
-import { BECH32_PREFIX,CompositeClient, LocalWallet, Network, OrderFlags, OrderSide, OrderTimeInForce, OrderType, SubaccountClient } from "@dydxprotocol/v4-client-js";
+import { BECH32_PREFIX,CompositeClient, LocalWallet, Network, OrderExecution, OrderFlags, OrderSide, OrderTimeInForce, OrderType, SubaccountClient } from "@dydxprotocol/v4-client-js";
 import { BotOrder, Bot, BrokerConfig, Warning, TxResponse, Position } from "../bot";
 
 /**
  * Bot implementation for dYdX
  */
 export class DYDXBot extends Bot {
+
+    // Fine-tuning parameters
+    private MARKET_ORDER_BUY_FACTOR = 1.2;
+    private MARKET_ORDER_SELL_FACTOR = 0.35;
 
     public client?: CompositeClient;
     private network: Network;
@@ -63,7 +67,7 @@ export class DYDXBot extends Bot {
     /**
      * @see Bot
      */
-    async closePosition(market: string, hasToBeSide?: OrderSide, refPrice?: number, refPriceRoundingFactor?: number): Promise<{tx: TxResponse,position: Position}> {
+    async createClosePositionOrder(market: string, refPrice: number, refPriceRoundingFactor: number): Promise<{order: BotOrder,position: Position}> {
 
         if(this.client === undefined) throw new Error("Client not initialized");
         if(this.subaccount === undefined) throw new Error("Subaccount not initialized");
@@ -74,16 +78,15 @@ export class DYDXBot extends Bot {
         });
         if(position === undefined) throw new Warning(`Trying to close a positon that does not exist on ${market}`);
 
-        // Check if position side is correct
-        if(hasToBeSide !== undefined && position.side !== (hasToBeSide === OrderSide.BUY ? Bot.SIDE_LONG : Bot.SIDE_SHORT)) throw new Error(`Trying to close a positon on ${market} but the position is already on the target side (${position.side})`);
-
         // Closing order
         const closingOrder: BotOrder = new BotOrder();
         closingOrder.market = market;
-        closingOrder.clientId = Date.now();
-        
+        closingOrder.clientId = Math.floor(Math.random() * 100);
+        closingOrder.type = OrderType.MARKET;
+        closingOrder.timeInForce = OrderTimeInForce.IOC;
+        closingOrder.execution = OrderExecution.IOC;
         if(position.side === Bot.SIDE_LONG){
-            closingOrder.size = position.size;
+            closingOrder.size = +position.size;
             closingOrder.side = OrderSide.SELL;
         } 
         else if(position.side === Bot.SIDE_SHORT) {
@@ -91,29 +94,34 @@ export class DYDXBot extends Bot {
             closingOrder.side = OrderSide.BUY;
         }
 
-        // Use a limit order to close the position if a reference price is provided
-        if(refPrice !== undefined) {
-            closingOrder.type = OrderType.LIMIT;
+        // Closing max price
+        let closingPrice = (closingOrder.side === OrderSide.BUY ? refPrice*this.MARKET_ORDER_BUY_FACTOR : refPrice*this.MARKET_ORDER_SELL_FACTOR);
+        if(refPriceRoundingFactor !== undefined) closingPrice = Math.round(closingPrice*refPriceRoundingFactor)/refPriceRoundingFactor;
+        closingOrder.price = closingPrice;
 
-            // Limit closing price
-            let closingPrice = (closingOrder.side === OrderSide.BUY ? refPrice*1.5 : refPrice*0.75);
-            if(refPriceRoundingFactor !== undefined) closingPrice = Math.round(closingPrice*refPriceRoundingFactor)/refPriceRoundingFactor;
+        // Debug
+        if(process.env.BOT_DEBUG === "true") this.discord.sendDebug(`CLOSING ORDER: ${JSON.stringify(closingOrder, null, 2)}`)
 
-            closingOrder.price = closingPrice;
-            closingOrder.goodTillTime = 3600;
-            closingOrder.timeInForce = OrderTimeInForce.GTT;
-        }
-        // Use a market order to close the position if no reference price is provided
-        else {
-            closingOrder.type = OrderType.MARKET;
-            closingOrder.timeInForce = OrderTimeInForce.FOK;
-            closingOrder.reduceOnly = true;
-        }
+        // Adding reduceOnly flag could be a problem if transaction are not executed in the right order
+        // closingOrder.reduceOnly = true;
+
+        return {order:closingOrder,position:position};
+    }
+
+
+    /**
+     * @see Bot
+     */
+    async closePosition(market: string, refPrice: number, refPriceRoundingFactor: number): Promise<{tx: TxResponse,position: Position}> {
+
+        const params: {order: BotOrder,position: Position} = await this.createClosePositionOrder(market, refPrice, refPriceRoundingFactor);
+        const position: Position = params.position;
 
         // Send closing order
-        const tx: TxResponse = await this.placeOrder(closingOrder);
+        const tx: TxResponse = await this.placeOrder(params.order);
 
-        return {tx,position};
+        return {tx, position};
+
     }
 
     /**
