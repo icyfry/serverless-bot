@@ -107,19 +107,19 @@ export class Discord {
         embed.addFields({ name: `size`, value: `${position.size}`, inline: true });
 
         // Performance at close
-        const perf = Math.round((pnl/(position.sumOpen * position.entryPrice))*100)/100;
+        const perf = Math.round((pnl/(position.sumOpen * position.entryPrice))*10000)/10000;
         let perfIcon: string;
-        if(perf > -0.02 && perf < 0.02) {
+        if(perf > -0.05 && perf < 0.02) {
             perfIcon = "😑";
-        }else if(perf >= 0.1) {
-            perfIcon = "🚀";
         }else if(perf <= -0.05) {
             perfIcon = "😡";
+        }else if(perf >= 0.1) {
+            perfIcon = "🚀";
         }else {
-            perfIcon = "😐";
+            perfIcon = "🙂";
         }
 
-        embed.setDescription(`${perfIcon} Close position at ${perf*100}%`);
+        embed.setDescription(`${perfIcon} Close position at **${perf*100}**%`);
 
         if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
 

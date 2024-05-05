@@ -55,15 +55,15 @@ describe("dYdX", () => {
     order.size = 100;
     order.price = 0.01;
     order.side = OrderSide.BUY;
-    await bot.placeOrder(order).catch(console.error);
+    await bot.placeOrder(order);
   }, TIMEOUT);
 
   it("testnet open and close position", async () => {
     const market = "DOGE-USD";
 
-    // Require OPEN DOGE-USD position
+    // Require open long DOGE-USD position
 
-    // CLose (error on side)
+    // Try to cLose (error on side)
     try {
       await bot.closePosition(market,OrderSide.SELL);
     }
@@ -72,7 +72,7 @@ describe("dYdX", () => {
       expect((e as Error).message).toBe("Trying to close a positon on DOGE-USD but the position is already on the target side (LONG)");
     }
 
-    // CLose (error on exist)
+    // Try to cLose (error on exist)
     try {
       await bot.closePosition('ETH-USD');
     }
@@ -82,7 +82,7 @@ describe("dYdX", () => {
     }
 
     // CLose Position
-    await bot.closePosition(market, OrderSide.BUY , 1, 100000).catch(console.error);
+    await bot.closePosition(market, OrderSide.BUY , 1, 100000);
     
   }, TIMEOUT);
 

@@ -39,6 +39,10 @@ export class DYDXBot extends Bot {
         } else  { 
             throw new Error("Network not defined");
         }
+
+        // No wallet to connect to dYdX
+        if(walletMnemonic === undefined) throw new Error("Wallet mnemonic not defined");
+
         this.wallet = await LocalWallet.fromMnemonic(walletMnemonic, BECH32_PREFIX);
         this.subaccount = new SubaccountClient(this.wallet, this.SUBACCOUNT_NUMBER);
         

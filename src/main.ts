@@ -38,6 +38,7 @@ exports.handler = function (event: APIGatewayProxyEvent, context: Context, callb
     } 
     catch(e) {
         console.error(e);
+        // Return generic error
         exit(callback, {response_error: new Error("Error"), response_success:undefined} );
     }
     
@@ -81,7 +82,7 @@ function DydxHandler(input: Input, context: Context, callback: APIGatewayProxyCa
 
     }).catch((e: Error): void => {
         console.error(e);
-        // Return generic error in the body
+        // Return generic error
         exit(callback, {response_error: new Error("Error"), response_success:undefined} );
     });
 

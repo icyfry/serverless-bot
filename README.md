@@ -19,11 +19,23 @@ A serverless bot to trigger automatic orders on dYdX
 ### Tools
 * [taskfile.dev](https://taskfile.dev/)
 
-### Setup and troubleshooting
+### Setup
 
-`zlib-sync` may cause segmentation fault on local development and unit tests when not using mock for the discord module
+Create a `.env` file
+```
+NETWORK=testnet
+```
 
-commands
-* `task test` Run unit tests
+Install dependencies, run unit tests and build
+```
+pnpm install
+pnpm run test-unit-only
+pnpm build
+```
+
+`zlib-sync` may cause segmentation fault on local development while running unit tests and not using mock for the discord module
+
+### Task Commands
+* `task test` Run all tests
 * `task build` Build with webpack
-* `task build-and-deploy` Build and deploy
+* `task build-and-deploy` Build and deploy to AWS

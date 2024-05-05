@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --coverage",
+    "test-unit-only": "jest --testPathIgnorePatterns='dydx.test.ts'",
     "build": "rimraf build && webpack --mode production",
     "lint": "eslint --fix src"
   },
