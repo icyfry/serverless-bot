@@ -1,5 +1,6 @@
 import { BECH32_PREFIX,CompositeClient, LocalWallet, Network, OrderExecution, OrderFlags, OrderSide, OrderTimeInForce, OrderType, SubaccountClient } from "@dydxprotocol/v4-client-js";
 import { BotOrder, Bot, BrokerConfig, Warning, TxResponse, Position } from "../bot";
+import crypto from 'crypto';
 
 /**
  * Bot implementation for dYdX
@@ -81,7 +82,7 @@ export class DYDXBot extends Bot {
         // Closing order
         const closingOrder: BotOrder = new BotOrder();
         closingOrder.market = market;
-        closingOrder.clientId = Math.floor(Math.random() * 100);
+        closingOrder.clientId = crypto.randomBytes(4).readUInt32BE(0) % 10000000;
         closingOrder.type = OrderType.MARKET;
         closingOrder.timeInForce = OrderTimeInForce.IOC;
         closingOrder.execution = OrderExecution.IOC;

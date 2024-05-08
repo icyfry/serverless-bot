@@ -1,6 +1,9 @@
 // Mock discord client
 import './__mocks__/discord-client-mock';
 
+// Mock DYDX
+import './__mocks__/dydx-mock';
+
 import { FaucetApiHost, FaucetClient, Network, OrderExecution, OrderSide, OrderTimeInForce, OrderType } from "@dydxprotocol/v4-client-js";
 import { DYDXBot} from "../src/dydx/dydx-bot";
 import { BotOrder, BrokerConfig, Input, InputSource } from "../src/bot";
@@ -39,18 +42,25 @@ describe("dYdX", () => {
     await bot.disconnect();
   }, TIMEOUT);
 
-  xit("connect client", async () => {
+  it("connect client", async () => {
     const address: string = bot.subaccount?.address as string;
-    expect(bot.client).toBeDefined();
-    expect(bot.subaccount).toBeDefined();
-    expect(bot.wallet).toBeDefined();
     expect(address).toBe(process.env.BOT_TESTNET_ADDRESS)
   }, TIMEOUT);
 
-  xit("testnet place order not executed", async () => {
+  it("dydx dryrun", async () => {
+    const input : Input = {roundingFactorPrice:1000, roundingFactorSize:1000, interval:60, dryrun:true, emitKey:"", market:"DOGE-USD", price:10000, source: InputSource.Mock ,details:{}};
+    try {
+      await bot.process(input, new BasicStrat(), undefined);
+    } 
+    catch(e: unknown){
+      expect((e as Error).message).toBe("dryrun : process not executed");
+    }
+  });
+
+  it("[testnet] place order not executed", async () => {
     const order = new BotOrder();
     order.type = OrderType.LIMIT;
-    order.execution = OrderExecution.FOK; // Will fail
+    order.execution = OrderExecution.FOK;
     order.market = "DOGE-USD";
     order.size = 100;
     order.price = 0.01;
@@ -58,7 +68,7 @@ describe("dYdX", () => {
     await bot.placeOrder(order);
   }, TIMEOUT);
 
-  xit("testnet open and close position", async () => {
+  xit("[testnet] open and close position", async () => {
     const market = "DOGE-USD";
 
     // open long DOGE-USD position
@@ -80,25 +90,13 @@ describe("dYdX", () => {
       expect((e as Error).message).toBe("Trying to close a positon that does not exist on ETH-USD");
     }
 
-    // CLose Position after 5s (wait for tx validation)
-    await setTimeout(async () => {
-      await bot.closePosition(market, 1, 100000);
-    }, 5000);
+    await bot.closePosition(market, 1, 100000);
 
   }, TIMEOUT);
 
-  xit("dryrun", async () => {
-    const input : Input = {roundingFactorPrice:1000, roundingFactorSize:1000, interval:60, dryrun:true, emitKey:"", market:"DOGE-USD", price:10000, source: InputSource.Mock ,details:{}};
-    try {
-      await bot.process(input, new BasicStrat(), undefined);
-    } 
-    catch(e: unknown){
-      expect((e as Error).message).toBe("dryrun : process not executed");
-    }
-  });
-
-  xit("testnet add faucet", async () => {
-    // add faucet to testnet
+  // Add faucet (testnet)
+  xit("[testnet] add faucet", async () => {
+    
     const faucetClient = new FaucetClient(FaucetApiHost.TESTNET);
     if(bot.subaccount !== undefined) await faucetClient?.fill(bot.subaccount.address, 0, 1000).catch(console.error).then(console.log);
   });

@@ -8,9 +8,9 @@ import { Strat } from "./strat";
 export class StatelessTrendStrat extends Strat {
     
     // Fine-tuning parameters
-    private FO_TIME_FACTOR = 1;
-    private ORDER_BUY_FACTOR = 1.2;
-    private ORDER_SELL_FACTOR = 0.35;
+    private FO_TIME_FACTOR = 3;
+    private ORDER_BUY_FACTOR = 1.1;
+    private ORDER_SELL_FACTOR = 0.7;
     private FO_ORDER_BUY_FACTOR = 1.015;
     private FO_ORDER_SELL_FACTOR = 0.985;
     private OPTIMISTIC_TIMEFRAME_ACTIVATION = 300; // 5min
@@ -38,6 +38,17 @@ export class StatelessTrendStrat extends Strat {
         order.type = OrderType.LIMIT;
         order.timeInForce = OrderTimeInForce.GTT;
         order.execution = OrderExecution.DEFAULT;
+        order.goodTillTime = Number(input.interval);
+        
+        // Market entry for interval > OPTIMISTIC_TIMEFRAME_ACTIVATION
+        if(Number(input.interval) > this.OPTIMISTIC_TIMEFRAME_ACTIVATION) {
+            if(side === OrderSide.BUY) {
+                price = Number(price) * this.ORDER_BUY_FACTOR;
+            }else if(side === OrderSide.SELL) {
+                price = Number(price) * this.ORDER_SELL_FACTOR;
+            }
+        }
+        
         order.price = Math.round(Number(price)*input.roundingFactorPrice)/input.roundingFactorPrice;
         return order
     }
@@ -113,16 +124,7 @@ export class StatelessTrendStrat extends Strat {
                 orders.push(fakeOutOrder);
 
                 // Main order
-                let entryPrice = Number(details.entry);
-
-                // Market entry for interval > OPTIMISTIC_TIMEFRAME_ACTIVATION
-                if(Number(input.interval) > this.OPTIMISTIC_TIMEFRAME_ACTIVATION) {
-                    if(sideMainOrder === OrderSide.BUY) {
-                        entryPrice = Number(entryPrice) * this.ORDER_BUY_FACTOR;
-                    }else if(sideMainOrder === OrderSide.SELL) {
-                        entryPrice = Number(entryPrice) * this.ORDER_SELL_FACTOR;
-                    }
-                }
+                const entryPrice = Number(details.entry);
 
                 const mainOrder = this.createMainOrder(entryPrice, sideMainOrder, size, input);
                 orders.push(...this.splitOrder(mainOrder));

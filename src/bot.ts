@@ -190,6 +190,27 @@ export abstract class Bot {
     };
 
     /**
+     * Check if trying to close a position to open same side and size
+     */
+    public checkClosingOrder(openOrder: BotOrder, closingOrder: {order: BotOrder, position: Position}) {
+        if(closingOrder.order.side !== openOrder.side && closingOrder.order.size === openOrder.size) {
+            throw new Error(`Trying to close a ${closingOrder.order.size} ${closingOrder.order.market} ${closingOrder.position.side} position and will then open an identical position`);
+        }
+    }
+
+    /**
+     * Place all orders
+     */
+    private async placeOrders(orders: BotOrder[], input: Input, strategy: Strat): Promise<void> {   
+        // Place orders
+        for(const order of orders) {
+            if(process.env.BOT_DEBUG === "true") this.discord.sendDebug(`ORDER: ${JSON.stringify(order, null, 2)}`)
+            const orderTransaction: TxResponse = await this.placeOrder(order);
+            if(process.env.BOT_DEBUG === "true") await this.discord.sendMessageOrder(order, input, strategy, orderTransaction);
+        }
+    }
+
+    /**
      * Process the lambda input event
      * @param input input of the lambda
      * @param strategy the strategy to apply
@@ -198,7 +219,7 @@ export abstract class Bot {
      */
     public async process(input: Input, strategy: Strat, context?: Context): Promise<CallbackResponseParams> {
 
-        if(context?.awsRequestId !== undefined) console.log(context?.awsRequestId);
+        if(context !== undefined) this.discord.setAWSContext(context);
 
         // Return of the process
         const response: CallbackResponseParams = {
@@ -224,7 +245,14 @@ export abstract class Bot {
             try {
                 const closingOrder: {order: BotOrder, position: Position} = await this.createClosePositionOrder(input.market,input.price,input.roundingFactorPrice);
                 orders.push(closingOrder.order);
-                await this.discord.sendMessageClosePosition(input.market, closingOrder.position);
+
+                // Log all orders
+                console.log(JSON.stringify(orders));
+
+                // Check if the closing order need to be executed
+                this.checkClosingOrder(orders[1], closingOrder);
+
+                await this.discord.sendMessageClosePosition(input, closingOrder.order, closingOrder.position);
             }
             catch(error) {
                 if(error instanceof Warning) {
@@ -234,12 +262,7 @@ export abstract class Bot {
             }
 
             // Place orders
-            console.log(JSON.stringify(orders));
-            for(const order of orders) {
-                if(process.env.BOT_DEBUG === "true") this.discord.sendDebug(`ORDER: ${JSON.stringify(order, null, 2)}`)
-                const orderTransaction: TxResponse = await this.placeOrder(order);
-                if(process.env.BOT_DEBUG === "true") await this.discord.sendMessageOrder(order, input, strategy, orderTransaction);
-            }
+            await this.placeOrders(orders, input, strategy);
             
             // Output
             const output: Output = new Output(orders);

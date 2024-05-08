@@ -1,4 +1,5 @@
 import { BotOrder, Input } from "../bot";
+import crypto from 'crypto';
 
 /**
  * Strategy to be executed by the bot
@@ -9,7 +10,7 @@ export abstract class Strat {
     public R  = Number(process.env.BOT_R_USD);
 
     // Orders ids
-    private OrderIdTracker: number = Math.floor(Math.random() * 10000000);
+    private OrderIdTracker: number = crypto.randomBytes(4).readUInt32BE(0) % 10000000;
 
     /**
      * Stateless orders deduction

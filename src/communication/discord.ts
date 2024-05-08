@@ -4,6 +4,7 @@ import { OrderSide, OrderType } from "@dydxprotocol/v4-client-js";
 import { Strat } from "../strategy/strat";
 import { BroadcastTxAsyncResponse, BroadcastTxSyncResponse } from "@cosmjs/tendermint-rpc";
 import { IndexedTx } from "@cosmjs/stargate";
+import { Context } from "aws-lambda";
 
 // Transaction response
 type TxResponse = BroadcastTxAsyncResponse | BroadcastTxSyncResponse | IndexedTx;
@@ -17,6 +18,7 @@ export class Discord {
     public channel?: TextChannel;
 
     public prefix = ""; // global prefix for all messages
+    private context?: Context; // AWS Context
 
     // Bot reference
     public address?: string;
@@ -76,6 +78,13 @@ export class Discord {
     }
 
     /**
+     * Set the AWS context (to display in the messages)
+     */
+    public setAWSContext(context: Context) {
+        this.context = context;
+    }
+
+    /**
      * Send a basic text message
      */
     public sendMessage(message: string): Promise<Message> {
@@ -95,8 +104,8 @@ export class Discord {
      * Send a error message
      */
     public sendError(message: Error): Promise<Message> {
-        if(message instanceof Warning) return this.sendMessage("⚠️ "+message);
-        else return this.sendMessage("❌ "+message);
+        if(message instanceof Warning) return this.sendMessage(`⚠️ ${message} (${this.context?.logStreamName})`);
+        else return this.sendMessage(`❌ ${message} (${this.context?.logStreamName})`);
     }
 
     /**
@@ -111,7 +120,9 @@ export class Discord {
     /**
      * Send a message when a position is closed
      */
-    public sendMessageClosePosition(market: string, position: Position, tx?: TxResponse): Promise<Message> {
+    public sendMessageClosePosition(input: Input, order:BotOrder, position: Position, tx?: TxResponse): Promise<Message> {
+
+        if(process.env.BOT_DEBUG === "true") this.sendDebug(`POSITION: ${JSON.stringify(position, null, 2)}`)
 
         let color: ColorResolvable = 0x000000;
         if (position.side === Bot.SIDE_LONG) {
@@ -121,7 +132,7 @@ export class Discord {
         }
         
         const embed = new EmbedBuilder()
-        .setTitle(`${market}`)
+        .setTitle(`${input.market}`)
         .setColor(color)
         .setTimestamp();
         
@@ -130,12 +141,10 @@ export class Discord {
         }
 
         const pnl: number = Math.round((+position.realizedPnl + +position.unrealizedPnl)*100)/100;
-        embed.addFields({ name: `in/out`, value: `${position.entryPrice}/${position.exitPrice}`, inline: true });
-        embed.addFields({ name: `size`, value: `${position.size}`, inline: true });
-
-        const duration = position.createdAt.valueOf() - position.closedAt.valueOf();
-        embed.addFields({ name: `duration`, value: `${duration/1440000} hours`, inline: true });
-
+        embed.addFields({ name: `in/out`, value: `${position.entryPrice}/${input.price}`, inline: true });
+        embed.addFields({ name: `size`, value: `${Math.abs(position.size)}`, inline: true });
+        embed.addFields({ name: `logs`, value: `${this.context?.logStreamName}`, inline: true });
+        
         // Performance
         const perf = Math.round((pnl/(position.sumOpen * position.entryPrice))*10000)/10000;
         let perfIcon: string;
@@ -153,7 +162,7 @@ export class Discord {
             perfIcon = "🤔";
         }
 
-        embed.setDescription(`${perfIcon} Close ${position.side} position with profit of **${perf*100}**% (**${pnl}**$)`);
+        embed.setDescription(`${perfIcon} Close ${order.type} ${position.side} position with profit of **${perf*100}**% (**${pnl}**$)`);
 
         if (tx !== undefined) embed.addFields(this.getTxEmbedField(tx));
 

@@ -67,6 +67,12 @@ describe("discord", () => {
 
   it("close position message to discord", async () => {
     
+    let order = new BotOrder();
+    order.price = 10000;
+
+    let input: Input = new Input("{}");
+    input.market = "BTC-USD";
+
     let tx: IndexedTx = {
       height: 0,
       txIndex: 0,
@@ -98,7 +104,7 @@ describe("discord", () => {
       netFunding: 0
     }   
     
-    d.sendMessageClosePosition("BTC-USD",position,tx);
+    d.sendMessageClosePosition(input,order,position,tx);
 
     position = {
       realizedPnl: 20, 
@@ -118,7 +124,7 @@ describe("discord", () => {
       netFunding: 0
     }   
     
-    d.sendMessageClosePosition("BTC-USD",position,tx);
+    d.sendMessageClosePosition(input,order,position,tx);
 
 
   }, TIMEOUT);
