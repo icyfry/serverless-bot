@@ -62,13 +62,13 @@ export class BotOrder {
 
 // Output of the bot
 export class Output {
-    public order: BotOrder;
-    constructor(order: BotOrder) {
-        this.order = order;
+    public orders: BotOrder[];
+    constructor(orders: BotOrder[]) {
+        this.orders = orders;
     }
     toString() : string { return JSON.stringify(
         {
-            "order" : this.order,
+            "orders" : this.orders,
         },
     null, 2); }
 }
@@ -96,24 +96,19 @@ export interface InputDetails {
 
 // Available sources of input
 export enum InputSource {
-    SuperTrend = "SUPER_TREND",
-    SMC = "SMART_MONEY_CONCEPTS",
+    TrendSignal = "TREND",
     Mock = "MOCK"
 }
 
-// Details of the SuperTrend input
-export class SuperTrendDetails implements InputDetails {
-    public action = "BUY"; // BUY or SELL
-    public limit = 0;
+// Details of the TrendSignal input
+export class TrendSignalDetails implements InputDetails {
+    public trend = "BUY"; // BUY or SELL
+    public entry = 0; // BUY or SELL limit price entry
+    public cancel = 0; // Fake-out price
     public plots?: string[] = [];
     constructor(details: string) {
         Object.assign(this, JSON.parse(details));
     }
-}
-
-// Details of the SMC input
-export interface SMCDetails extends InputDetails{
-    type: string;
 }
 
 /**
@@ -142,15 +137,20 @@ export abstract class Bot {
     public abstract placeOrder(order:BotOrder): Promise<TxResponse>;
 
     /**
-     * Close a position on the broker
+     * Execute a close position order
+     * @see createClosePositionOrder
+     */
+    public abstract closePosition(market: string, refPrice: number, refPriceRoundingFactor: number): Promise<{tx: TxResponse, position: Position}>;
+
+    /**
+     * Create an order to close a position
      * @param market the market to close
-     * @param hasToBeSide the side the position has to be before closing (LONG or SHORT)
      * @param refPrice reference price used to close the position
      * @param refPriceRoundingFactor rounding factor for prices related to the reference price
      * @returns transaction response and position closed
      */
-    public abstract closePosition(market: string, hasToBeSide?: OrderSide, refPrice?: number, refPriceRoundingFactor?: number): Promise<{tx: TxResponse, position: Position}>;
-    
+    public abstract createClosePositionOrder(market: string, refPrice: number, refPriceRoundingFactor: number): Promise<{order: BotOrder,position: Position}>;
+
     /**
      * Connect to the broker
      * @returns address of the connected account
@@ -190,6 +190,27 @@ export abstract class Bot {
     };
 
     /**
+     * Check if trying to close a position to open same side and size
+     */
+    public checkClosingOrder(openOrder: BotOrder, closingOrder: {order: BotOrder, position: Position}) {
+        if(closingOrder.order.side !== openOrder.side && closingOrder.order.size === openOrder.size) {
+            throw new Error(`Trying to close a ${closingOrder.order.size} ${closingOrder.order.market} ${closingOrder.position.side} position and will then open an identical position`);
+        }
+    }
+
+    /**
+     * Place all orders
+     */
+    private async placeOrders(orders: BotOrder[], input: Input, strategy: Strat): Promise<void> {   
+        // Place orders
+        for(const order of orders) {
+            if(process.env.BOT_DEBUG === "true") this.discord.sendDebug(`ORDER: ${JSON.stringify(order, null, 2)}`)
+            const orderTransaction: TxResponse = await this.placeOrder(order);
+            if(process.env.BOT_DEBUG === "true") await this.discord.sendMessageOrder(order, input, strategy, orderTransaction);
+        }
+    }
+
+    /**
      * Process the lambda input event
      * @param input input of the lambda
      * @param strategy the strategy to apply
@@ -198,7 +219,7 @@ export abstract class Bot {
      */
     public async process(input: Input, strategy: Strat, context?: Context): Promise<CallbackResponseParams> {
 
-        if(context?.awsRequestId !== undefined) console.log(context?.awsRequestId);
+        if(context !== undefined) this.discord.setAWSContext(context);
 
         // Return of the process
         const response: CallbackResponseParams = {
@@ -217,26 +238,34 @@ export abstract class Bot {
             // Stop on dryrun
             if(input.dryrun) throw new Error("dryrun : process not executed");
 
-            // Order
-            const order: BotOrder = strategy.getStatelessOrderBasedOnInput(input);
+            // Create Orders of the strategy
+            const orders: BotOrder[] = strategy.getStatelessOrdersBasedOnInput(input);
+            
+            // Create order to close previous position on this market
+            try {
+                const closingOrder: {order: BotOrder, position: Position} = await this.createClosePositionOrder(input.market,input.price,input.roundingFactorPrice);
+                orders.push(closingOrder.order);
 
-            // Close previous position on this market
-            try{
-            const closingTransaction: {tx: TxResponse, position: Position} = await this.closePosition(order.market, order.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY, order.price, input.roundingFactorPrice);
-            await this.discord.sendMessageClosePosition(order.market, closingTransaction.position, closingTransaction.tx);
-            } catch(error) {
+                // Log all orders
+                console.log(JSON.stringify(orders));
+
+                // Check if the closing order need to be executed
+                this.checkClosingOrder(orders[1], closingOrder);
+
+                await this.discord.sendMessageClosePosition(input, closingOrder.order, closingOrder.position);
+            }
+            catch(error) {
                 if(error instanceof Warning) {
                     console.warn(error);
-                    await this.discord.sendError(error); // Position not closed
+                    await this.discord.sendError(error);
                 } else throw error;
             }
-            
-            // Open new position
-            const orderTransaction: TxResponse = await this.placeOrder(order);
-            await this.discord.sendMessageOrder(order, input, strategy, orderTransaction);
+
+            // Place orders
+            await this.placeOrders(orders, input, strategy);
             
             // Output
-            const output: Output = new Output(order);
+            const output: Output = new Output(orders);
             console.log("Output "+output);
             (response.response_success as APIGatewayProxyResult).body = JSON.stringify({"message": "process done"});
             

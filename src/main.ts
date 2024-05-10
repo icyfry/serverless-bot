@@ -1,8 +1,8 @@
 import { Network } from "@dydxprotocol/v4-client-js";
 import { DYDXBot } from "./dydx/dydx-bot";
-import { BasicStrat } from "./strategy/strat-basic";
 import { APIGatewayProxyCallback, APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 import { Bot, Input } from "./bot";
+import { StatelessTrendStrat } from "./strategy/strat-trend-stateless";
 
 /**
  * Response parameters for the APIGateway callback
@@ -27,12 +27,12 @@ exports.handler = function (event: APIGatewayProxyEvent, context: Context, callb
         const input : Input = new Input(event.body as string);
 
         // EmitKey check
-        if(input.emitKey !== process.env.EMIT_KEY) {
+        if(input.emitKey !== process.env.BOT_EMIT_KEY) {
             exit(callback, {response_error:new Error("not authorized"), response_success:undefined} );
         }
         else {
             // dYdX
-            DydxHandler(input, context, callback);
+            DYDXHandler(input, context, callback);
         }
 
     } 
@@ -46,21 +46,22 @@ exports.handler = function (event: APIGatewayProxyEvent, context: Context, callb
 
 /**
  * Exit the lambda function
- * @param callback callback function
- * @param response content returned by the bot
  */
 function exit(callback: APIGatewayProxyCallback, response: CallbackResponseParams) {
     console.log(response);
     callback(response.response_error, response.response_success);
 }
 
-function DydxHandler(input: Input, context: Context, callback: APIGatewayProxyCallback) {
+/**
+ * Run a dYdX bot
+ */
+function DYDXHandler(input: Input, context: Context, callback: APIGatewayProxyCallback) {
 
     let network: Network;
     
-    if(process.env.NETWORK === Bot.NETWORK_MAINNET) {
+    if(process.env.BOT_NETWORK === Bot.NETWORK_MAINNET) {
         network = Network.mainnet();
-    } else if(process.env.NETWORK === Bot.NETWORK_TESTNET) {
+    } else if(process.env.BOT_NETWORK === Bot.NETWORK_TESTNET) {
         network = Network.testnet();
     } else  { 
         throw new Error("Network not defined");
@@ -72,7 +73,9 @@ function DydxHandler(input: Input, context: Context, callback: APIGatewayProxyCa
 
         console.log("Connected to dydx with " + address);
 
-        bot.process(input, new BasicStrat(), context).then((response: CallbackResponseParams) => {
+        if(process.env.BOT_DEBUG === "true") bot.discord.sendDebug(`INPUT: ${JSON.stringify(input, null, 2)}`)
+
+        bot.process(input, new StatelessTrendStrat(), context).then((response: CallbackResponseParams) => {
             exit(callback,response);
         }).catch((e: Error): void => {
             throw e;

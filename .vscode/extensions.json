@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "github.vscode-github-actions",
+        "dbaeumer.vscode-eslint",
+        "sonarsource.sonarlint-vscode"
+    ]
+}

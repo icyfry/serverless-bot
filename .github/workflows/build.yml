@@ -8,11 +8,11 @@ on:
     types: [opened, synchronize, reopened]
 
 env:
-  TEST_MNEUMONIC_TESTNET: ${{ secrets.TEST_MNEUMONIC_TESTNET }}
-  TEST_ADDRESS_TESTNET: ${{ secrets.TEST_ADDRESS_TESTNET }}
-  TEST_BOT_URL: ${{ secrets.TEST_BOT_URL }}
-  TEST_DISCORD_TOKEN: ${{ secrets.TEST_DISCORD_TOKEN }}
-  DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
+  BOT_TESTNET_MNEUMONIC: ${{ secrets.BOT_TESTNET_MNEUMONIC }}
+  BOT_TESTNET_ADDRESS: ${{ secrets.BOT_TESTNET_ADDRESS }}
+  BOT_TEST_URL: ${{ secrets.BOT_TEST_URL }}
+  BOT_TEST_DISCORD_TOKEN: ${{ secrets.BOT_TEST_DISCORD_TOKEN }}
+  BOT_DISCORD_CHANNEL_ID: ${{ secrets.BOT_DISCORD_CHANNEL_ID }}
 
 jobs:
   serverless:
